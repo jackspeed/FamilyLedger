@@ -2,7 +2,11 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FF9999</color>
     <color name="window_bg">#ffededed</color>
     <color name="gray">#999999</color>
+    <color name="white">#ffffff</color>
+    <color name="color_title_bar">#6699cc</color>
+    <color name="color_btn_press">#6666ff</color>
+    <color name="color_btn_normal">@color/color_title_bar</color>
 </resources>

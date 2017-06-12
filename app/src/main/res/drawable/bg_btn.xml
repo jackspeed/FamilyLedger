@@ -3,7 +3,7 @@
     <item android:state_focused="true">
         <shape>
             <!-- 渐变 -->
-            <gradient android:endColor="@color/window_bg" android:startColor="@color/window_bg"/>
+            <gradient android:endColor="@color/color_btn_press" android:startColor="@color/color_btn_press"/>
             <corners android:radius="5dp" />
         </shape>
 
@@ -11,14 +11,14 @@
     <item android:state_pressed="true">
         <shape>
             <!-- 渐变 -->
-            <gradient android:endColor="@color/window_bg" android:startColor="@color/window_bg"/>
+            <gradient android:endColor="@color/color_btn_press" android:startColor="@color/color_btn_press"/>
             <corners android:radius="5dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <gradient android:endColor="#FFFFFF" android:startColor="#FFFFFF"/>
-            <corners android:radius="5dp" />
+            <gradient android:endColor="@color/color_btn_normal" android:startColor="@color/color_btn_normal"/>
+            <corners android:radius="5dp"  />
         </shape>
     </item>
 </selector>
