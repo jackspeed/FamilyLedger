@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="btn_go_main" type="id"/>
+    <item name="edx_phone_main" type="id"/>
+    <item name="edx_password_main" type="id"/>
+
+</resources>
