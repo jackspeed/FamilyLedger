@@ -19,25 +19,43 @@ android {
         }
     }
 }
+repositories {
+    mavenCentral()
+}
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    // Anko
-    // sdk19, sdk21, sdk23 are also available
-    // In case you need support-v4 bindings
-    // For appcompat-v7 bindings
-
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
-    compile 'org.jetbrains.anko:anko-sdk15:0.8.2'
-    compile 'org.jetbrains.anko:anko-support-v4:0.8.2'
-    compile 'org.jetbrains.anko:anko-appcompat-v7:0.8.2'
     testCompile 'junit:junit:4.12'
-}
-repositories {
-    mavenCentral()
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+
+    compile "org.jetbrains.anko:anko-sdk15:$anko_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    // Appcompat-v7 (only Anko Commons)
+    compile "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
+    // Appcompat-v7 (Anko Layouts)
+    compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+    compile "org.jetbrains.anko:anko-coroutines:$anko_version"
+    // CardView-v7
+    compile "org.jetbrains.anko:anko-cardview-v7:$anko_version"
+    // Design
+    compile "org.jetbrains.anko:anko-design:$anko_version"
+    compile "org.jetbrains.anko:anko-design-coroutines:$anko_version"
+    // GridLayout-v7
+    compile "org.jetbrains.anko:anko-gridlayout-v7:$anko_version"
+    // Percent
+    compile "org.jetbrains.anko:anko-percent:$anko_version"
+    // RecyclerView-v7
+    compile "org.jetbrains.anko:anko-recyclerview-v7:$anko_version"
+    compile "org.jetbrains.anko:anko-recyclerview-v7-coroutines:$anko_version"
+    // Support-v4 (only Anko Commons)
+    compile "org.jetbrains.anko:anko-support-v4-commons:$anko_version"
+    // Support-v4 (Anko Layouts)
+    compile "org.jetbrains.anko:anko-support-v4:$anko_version"
+    // Anko SQLite
+    compile "org.jetbrains.anko:anko-sqlite:$anko_version"
+    compile 'com.android.support:design:25.3.1'
 }

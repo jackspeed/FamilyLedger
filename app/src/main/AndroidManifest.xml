@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".KHomeActivity" />
         <activity android:name=".KRegisterActivity" />
+        <activity android:name=".KLedgerDetailActivity"></activity>
     </application>
 
 </manifest>

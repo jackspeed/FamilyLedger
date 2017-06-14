@@ -4,5 +4,7 @@
     <item name="btn_go_main" type="id"/>
     <item name="edx_phone_main" type="id"/>
     <item name="edx_password_main" type="id"/>
+    <item name="layout_title" type="id"/>
+    <item name="list_view_home" type="id"/>
 
 </resources>

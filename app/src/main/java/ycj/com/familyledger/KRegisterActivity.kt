@@ -19,6 +19,25 @@ class KRegisterActivity : KBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        btnGo!!.setOnClickListener {
+            if (edxPhone!!.text.toString().length < 11) {
+                toast(getString(R.string.error_phone_number))
+            } else if (edxPassword!!.text.toString().length < 6) {
+                toast(getString(R.string.password_not_full_six))
+            } else {
+                saveData()
+                toast(getString(R.string.success_register))
+                go2Home()
+            }
+        }
+        val mSP = getSharedPreferences(SP_APP_NAME, Context.MODE_PRIVATE)
+        val phone = mSP.getString(SP_PHONE, "")
+        val password = mSP.getString(SP_PASSWORD, "")
+        if (phone != "" && password != "") {
+            go2Home()
+            edxPhone!!.setText(phone)
+            edxPassword!!.setText(password)
+        }
     }
 
     private fun initView() {
@@ -26,18 +45,15 @@ class KRegisterActivity : KBaseActivity() {
             lparams(height = matchParent, width = matchParent) {
                 orientation = LinearLayout.VERTICAL
             }
-//                title栏
             linearLayout {
                 textView("伐木雷") {
                     textSize = sp(8).toFloat()
                     gravity = Gravity.CENTER_HORIZONTAL
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.color.color_title_bar
-                    lparams(height = dip(48), width = matchParent)
-                }
-                lparams(height = dip(48), width = matchParent)
-            }
 
+                }.lparams(height = dip(48), width = matchParent)
+            }
             linearLayout {
                 lparams(height = matchParent, width = matchParent) {
                     gravity = Gravity.CENTER
@@ -52,12 +68,12 @@ class KRegisterActivity : KBaseActivity() {
                     inputType = InputType.TYPE_CLASS_PHONE
                     backgroundResource = R.drawable.edx_input_bg
                     hint = "请输入手机号"
-                    lparams(width = matchParent, height = dip(48)) {
-                        bottomMargin = dip(40)
-                        leftMargin = dip(40)
-                        rightMargin = dip(40)
-                        padding = dip(5)
-                    }
+
+                }.lparams(width = matchParent, height = dip(48)) {
+                    bottomMargin = dip(40)
+                    leftMargin = dip(40)
+                    rightMargin = dip(40)
+                    padding = dip(5)
                 }
 
                 edxPassword = editText {
@@ -66,13 +82,12 @@ class KRegisterActivity : KBaseActivity() {
                     inputType = inputType
                     backgroundResource = R.drawable.edx_input_bg
                     hint = "请输密码"
-                    lparams(width = matchParent, height = dip(48)) {
-                        bottomMargin = dip(40)
-                        leftMargin = dip(40)
-                        rightMargin = dip(40)
-                        padding = dip(5)
+                }.lparams(width = matchParent, height = dip(48)) {
+                    bottomMargin = dip(40)
+                    leftMargin = dip(40)
+                    rightMargin = dip(40)
+                    padding = dip(5)
 
-                    }
                 }
 
                 btnGo = button {
@@ -81,30 +96,26 @@ class KRegisterActivity : KBaseActivity() {
                     textSize = sp(6).toFloat()
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.drawable.bg_btn
-                    lparams(width = matchParent, height = dip(48)) {
-                        leftMargin = dip(40)
-                        rightMargin = dip(40)
-                    }
-                    onClick {
-                        if (edxPhone!!.text.toString().length < 11) {
-                            toast("手机号不正确")
-                        } else if (edxPassword!!.text.toString().length < 6) {
-                            toast("密码不能少于六位")
-                        } else {
-                            saveData()
-                            toast("注册成功")
-                            go2Home()
-                        }
-                    }
+
+
+                }.lparams(width = matchParent, height = dip(48)) {
+                    leftMargin = dip(40)
+                    rightMargin = dip(40)
                 }
             }
         }
     }
 
+    companion object {
+        var SP_APP_NAME = "sp_user"
+        var SP_PHONE = "phone"
+        var SP_PASSWORD = "password"
+    }
+
     private fun saveData() {
-        val edit = getSharedPreferences("sp_user", Context.MODE_PRIVATE).edit()
-        edit.putString("phone", edxPhone!!.text.toString())
-        edit.putString("password", edxPassword!!.text.toString())
+        val edit = getSharedPreferences(SP_APP_NAME, Context.MODE_PRIVATE).edit()
+        edit.putString(SP_PHONE, edxPhone!!.text.toString())
+        edit.putString(SP_PASSWORD, edxPassword!!.text.toString())
         edit.apply()
     }
 

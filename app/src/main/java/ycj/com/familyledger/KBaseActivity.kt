@@ -24,9 +24,9 @@ open class KBaseActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textColor = resources.getColor(R.color.white)
                 backgroundResource = R.color.color_title_bar
-                lparams(height = dip(48), width = matchParent)
             }
             lparams(height = dip(48), width = matchParent)
         }.view()
     }
+
 }
