@@ -57,4 +57,16 @@ class KHomeAdapter : RecyclerView.Adapter<KHomeAdapter.MyViewHolder> {
     interface ItemClickListener {
         fun onItemClickListener(position: Int)
     }
+
+    fun addNewItem(position: Int) {
+        if (position >= dataList.size) return
+        dataList.add(position, "new Item")
+        notifyItemInserted(position)
+    }
+
+    fun deleteItem(position: Int) {
+        if (position >= dataList.size) return
+        dataList.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }

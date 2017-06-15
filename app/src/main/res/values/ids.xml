@@ -7,4 +7,7 @@
     <item name="layout_title" type="id"/>
     <item name="list_view_home" type="id"/>
 
+    <item name="edx_date_add" type="id"/>
+    <item name="edx_cash_add" type="id"/>
+
 </resources>

@@ -4,7 +4,7 @@
         <shape>
             <!-- 渐变 -->
             <gradient android:endColor="@color/color_btn_press" android:startColor="@color/color_btn_press"/>
-            <corners android:radius="5dp" />
+            <corners android:radius="8dp" />
         </shape>
 
     </item>
@@ -12,13 +12,13 @@
         <shape>
             <!-- 渐变 -->
             <gradient android:endColor="@color/color_btn_press" android:startColor="@color/color_btn_press"/>
-            <corners android:radius="5dp" />
+            <corners android:radius="8dp" />
         </shape>
     </item>
     <item>
         <shape>
             <gradient android:endColor="@color/color_btn_normal" android:startColor="@color/color_btn_normal"/>
-            <corners android:radius="5dp"  />
+            <corners android:radius="8dp"  />
         </shape>
     </item>
 </selector>
