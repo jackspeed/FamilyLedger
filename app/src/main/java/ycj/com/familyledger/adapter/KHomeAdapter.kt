@@ -12,7 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import org.jetbrains.anko.find
 import ycj.com.familyledger.R
-import ycj.com.familyledger.utils.ItemTouchCallBack
+import ycj.com.familyledger.impl.ItemTouchCallBack
 
 
 /**

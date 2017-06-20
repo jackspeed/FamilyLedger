@@ -6,6 +6,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.ViewGroup
 import ycj.com.familyledger.adapter.KHomeAdapter
+import ycj.com.familyledger.impl.ItemTouchCallBack
 
 
 /**
