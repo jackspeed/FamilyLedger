@@ -10,4 +10,9 @@
     <item name="edx_date_add" type="id"/>
     <item name="edx_cash_add" type="id"/>
 
+    <item name="img_right_home" type="id"/>
+    <item name="btn_home_add" type="id"/>
+
+    <item name="layout_back" type="id"/>
+
 </resources>

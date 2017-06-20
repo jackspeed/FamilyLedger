@@ -1,7 +1,7 @@
 package ycj.com.familyledger
 
 import android.content.Context
-import android.os.Bundle
+import android.text.InputFilter
 import android.text.InputType
 import android.view.Gravity
 import android.widget.Button
@@ -9,27 +9,17 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import org.jetbrains.anko.*
 
+
 class KRegisterActivity : KBaseActivity() {
+
+
     private var edxPhone: EditText? = null
 
     private var btnGo: Button? = null
 
     private var edxPassword: EditText? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-        btnGo!!.setOnClickListener {
-            if (edxPhone!!.text.toString().length < 11) {
-                toast(getString(R.string.error_phone_number))
-            } else if (edxPassword!!.text.toString().length < 6) {
-                toast(getString(R.string.password_not_full_six))
-            } else {
-                saveData()
-                toast(getString(R.string.success_register))
-                go2Home()
-            }
-        }
+    override fun initialize() {
         val mSP = getSharedPreferences(SP_APP_NAME, Context.MODE_PRIVATE)
         val phone = mSP.getString(SP_PHONE, "")
         val password = mSP.getString(SP_PASSWORD, "")
@@ -40,15 +30,15 @@ class KRegisterActivity : KBaseActivity() {
         }
     }
 
-    private fun initView() {
+    override fun initView() {
         linearLayout {
             lparams(height = matchParent, width = matchParent) {
                 orientation = LinearLayout.VERTICAL
             }
             linearLayout {
                 textView("伐木雷") {
-                    textSize = sp(8).toFloat()
-                    gravity = Gravity.CENTER_HORIZONTAL
+                    textSize = resources.getDimension(R.dimen.title_text_size)
+                    gravity = Gravity.CENTER
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.color.color_title_bar
 
@@ -66,6 +56,7 @@ class KRegisterActivity : KBaseActivity() {
                     maxLines = 1
                     maxEms = 11
                     inputType = InputType.TYPE_CLASS_PHONE
+                    filters = arrayOf<InputFilter>(InputFilter.LengthFilter(11))
                     backgroundResource = R.drawable.edx_input_bg
                     hint = "请输入手机号"
 
@@ -73,35 +64,45 @@ class KRegisterActivity : KBaseActivity() {
                     bottomMargin = dip(40)
                     leftMargin = dip(40)
                     rightMargin = dip(40)
-                    padding = dip(5)
                 }
 
                 edxPassword = editText {
                     id = R.id.edx_password_main
                     maxLines = 1
-                    inputType = inputType
+                    inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
                     backgroundResource = R.drawable.edx_input_bg
                     hint = "请输密码"
                 }.lparams(width = matchParent, height = dip(48)) {
                     bottomMargin = dip(40)
                     leftMargin = dip(40)
                     rightMargin = dip(40)
-                    padding = dip(5)
-
                 }
 
                 btnGo = button {
                     id = R.id.btn_go_main
                     text = "注册"
-                    textSize = sp(6).toFloat()
+                    textSize = sp(10).toFloat()
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.drawable.bg_btn
-
-
                 }.lparams(width = matchParent, height = dip(48)) {
                     leftMargin = dip(40)
                     rightMargin = dip(40)
                 }
+            }
+        }
+    }
+
+    override fun initListener() {
+        btnGo!!.setOnClickListener {
+            if (edxPhone!!.text.toString().length < 11) {
+                toast(getString(R.string.error_phone_number))
+            } else if (edxPassword!!.text.toString().length < 6) {
+                toast(getString(R.string.password_not_full_six))
+            } else {
+                saveData()
+                toast(getString(R.string.success_register))
+                go2Home()
             }
         }
     }

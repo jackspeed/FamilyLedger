@@ -1,55 +1,68 @@
 package ycj.com.familyledger
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.os.Build
-import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
-import android.view.Gravity
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.ImageView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 import ycj.com.familyledger.adapter.KHomeAdapter
+import ycj.com.familyledger.utils.RItemTouchHelper
 import ycj.com.familyledger.view.EdxDialog
 import ycj.com.familyledger.view.RecyclerViewItemDiv
 import java.util.*
 
 
-class KHomeActivity : KBaseActivity(), KHomeAdapter.ItemClickListener, EdxDialog.DataCallBack {
-
-    private var titleView: LinearLayout? = null
+class KHomeActivity : KBaseActivity(), KHomeAdapter.ItemClickListener, EdxDialog.DataCallBack, View.OnClickListener {
     private var lView: RecyclerView? = null
 
     private var data: ArrayList<String> = ArrayList()
 
+    private var fBtn: FloatingActionButton? = null
+
+    private var rightBtn: ImageView? = null
+
     companion object {
+
         val DATA_ID = "id"
     }
 
     private var mAdapter: KHomeAdapter? = null
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-        initData()
-        mAdapter = KHomeAdapter(data, this)
+    override fun initialize() {
+        for (i in 0..200) {
+            data.add("WHILE 循环" + i)
+        }
+        mAdapter?.notifyDataSetChanged()
+    }
 
+    private fun setData() {
+        mAdapter = KHomeAdapter(data, this)
         //分割线
         lView?.addItemDecoration(RecyclerViewItemDiv(this@KHomeActivity, LinearLayoutManager.VERTICAL))
         lView?.adapter = mAdapter
         lView?.layoutManager = LinearLayoutManager(this@KHomeActivity)
         //滑动监听
+        lView?.overScrollMode = View.OVER_SCROLL_NEVER
+        lView?.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?//设置Item增加、移除动画
+
+        val callBack = RItemTouchHelper(mAdapter!!)
+        val helpers = ItemTouchHelper(callBack)
+        helpers.attachToRecyclerView(lView)
+    }
+
+    override fun initListener() {
+        setData()
         lView?.setOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                Log.i("ycj onScrolled", "" + dx + "       " + dy)
                 if (lView?.scrollState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     if (dy > 0) {
                         fBtn?.hide()
@@ -58,13 +71,19 @@ class KHomeActivity : KBaseActivity(), KHomeAdapter.ItemClickListener, EdxDialog
                     }
                 }
             }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                Log.i("ycj ScrollChanged", "" + newState)
+                //==1,显示
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    fBtn?.show()
+                }
+            }
         })
-        lView?.overScrollMode = View.OVER_SCROLL_NEVER
-        lView?.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?//设置Item增加、移除动画
         mAdapter?.setOnItemClickListener(this)
-        fBtn?.setOnClickListener {
-            EdxDialog.create().showEdxDialog("请输入信息", this@KHomeActivity, this@KHomeActivity)
-        }
+        fBtn?.setOnClickListener(this)
+        rightBtn?.setOnClickListener(this)
     }
 
     //输入框返回
@@ -76,48 +95,60 @@ class KHomeActivity : KBaseActivity(), KHomeAdapter.ItemClickListener, EdxDialog
         go2Detail(position)
     }
 
+    override fun onItemDelClickListener(position: Int) {
+        Log.i("ycj", "position: " + position)
+
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.img_right_home -> toast("搜索")
+            R.id.btn_home_add -> EdxDialog.create()
+                    .showEdxDialog("请输入信息", this@KHomeActivity, this@KHomeActivity)
+        }
+    }
+
     private fun go2Detail(position: Int) {
         val intent = Intent(KHomeActivity@ this, KLedgerDetailActivity::class.java)
         intent.putExtra(DATA_ID, position)
         startActivity(intent)
     }
 
-    private fun initData() {
-        for (i in 0..20) {
-            data.add("WHILE 循环" + i)
-        }
-    }
 
-    private var fBtn: FloatingActionButton? = null
-
-    private fun initView() {
+    override fun initView() {
         relativeLayout {
             lparams(height = matchParent, width = matchParent)
-            titleView = linearLayout {
+            relativeLayout {
                 id = R.id.layout_title
+                backgroundResource = R.color.color_title_bar
                 textView("伐木雷") {
-                    textSize = sp(8).toFloat()
-                    gravity = Gravity.CENTER_HORIZONTAL
+                    textSize = resources.getDimension(R.dimen.title_text_size)
                     textColor = resources.getColor(R.color.white)
-                    backgroundResource = R.color.color_title_bar
-                }.lparams(height = matchParent, width = matchParent)
+                }.lparams(height = wrapContent, width = wrapContent) {
+                    centerInParent()
+                }
+                rightBtn = imageView {
+                    id = R.id.img_right_home
+                    imageResource = android.R.drawable.ic_menu_search
+                }.lparams(width = dip(24), height = dip(24)) {
+                    alignParentRight()
+                    centerVertically()
+                    rightMargin = dip(16)
+                }
             }.lparams(height = dip(48), width = matchParent)
             lView = recyclerView {
                 id = R.id.list_view_home
             }.lparams(width = matchParent, height = matchParent) { below(R.id.layout_title) }
             fBtn = floatingActionButton {
-                imageResource = R.mipmap.cha
-                compatElevation = 100F//阴影效果
-                backgroundTintList = ColorStateList.valueOf(R.color.colorAccent)
-            }.lparams(width = dip(60), height = dip(60)) {
+                id = R.id.btn_home_add
+                imageResource = android.R.drawable.ic_menu_add
+            }.lparams(width = wrapContent, height = wrapContent) {
                 alignParentRight()
                 alignParentBottom()
                 bottomMargin = dip(20)
                 rightMargin = dip(20)
             }
-
         }
-
     }
 
 }

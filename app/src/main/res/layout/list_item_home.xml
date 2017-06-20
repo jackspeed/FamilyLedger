@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ly_list_item_home"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:background="@drawable/bg_list_item"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -29,4 +29,21 @@
             android:textSize="16sp"
             tools:text="content" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fy_list_item_home"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="4dp"
+        android:background="#f44444">
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="删除"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </FrameLayout>
 </LinearLayout>
