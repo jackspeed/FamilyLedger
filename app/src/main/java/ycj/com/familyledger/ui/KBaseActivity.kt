@@ -1,4 +1,4 @@
-package ycj.com.familyledger
+package ycj.com.familyledger.ui
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity
  * @date: 2017-06-12 18:43
  * @version V1.0 <>
  */
-abstract class KBaseActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+abstract class KBaseActivity : android.support.v7.app.AppCompatActivity() {
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
         initListener()

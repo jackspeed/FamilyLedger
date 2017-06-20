@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ycj.com.familyledger">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -10,16 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".KLogoActivity">
+        <activity android:name=".ui.KLogoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".KHomeActivity" />
-        <activity android:name=".KRegisterActivity" />
-        <activity android:name=".KLedgerDetailActivity"></activity>
+        <activity android:name=".ui.KHomeActivity" />
+        <activity android:name=".ui.KRegisterActivity" />
+        <activity android:name=".ui.KLedgerDetailActivity" />
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package ycj.com.familyledger
 
 import android.app.Application
+import ycj.com.familyledger.http.HttpClientUtils
 
 /**
  * @author: ycj
@@ -11,5 +12,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         //TODO:初始化程序
+        //缓存Context
+        HttpClientUtils.getInstance(0).init(this)
     }
 }

@@ -1,10 +1,12 @@
-package ycj.com.familyledger
+package ycj.com.familyledger.ui
 
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import org.jetbrains.anko.*
+import ycj.com.familyledger.R
+import ycj.com.familyledger.http.HttpClientUtils
 
 class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener {
 
@@ -14,7 +16,8 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener {
     private var backLayout: RelativeLayout? = null
 
     override fun initialize() {
-        id = intent.getIntExtra(KHomeActivity.DATA_ID, 0)
+        id = intent.getIntExtra(KHomeActivity.Companion.DATA_ID, 0)
+        HttpClientUtils.getInstance(0).test()
     }
 
     override fun initView() {
