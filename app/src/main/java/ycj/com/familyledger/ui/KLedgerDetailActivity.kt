@@ -17,7 +17,6 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener {
 
     override fun initialize() {
         id = intent.getIntExtra(KHomeActivity.Companion.DATA_ID, 0)
-        HttpClientUtils.getInstance(0).test()
     }
 
     override fun initView() {

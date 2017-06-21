@@ -1,11 +1,12 @@
 package ycj.com.familyledger.ui
 
 import org.jetbrains.anko.*
+import ycj.com.familyledger.bean.Users
+import ycj.com.familyledger.http.HttpClientUtils
+import ycj.com.familyledger.impl.BaseCallBack
 
 
-class KRegisterActivity : KBaseActivity() {
-
-
+class KRegisterActivity : KBaseActivity(), BaseCallBack {
     private var edxPhone: android.widget.EditText? = null
 
     private var btnGo: android.widget.Button? = null
@@ -13,13 +14,13 @@ class KRegisterActivity : KBaseActivity() {
     private var edxPassword: android.widget.EditText? = null
 
     override fun initialize() {
-        val mSP = getSharedPreferences(ycj.com.familyledger.ui.KRegisterActivity.Companion.SP_APP_NAME, android.content.Context.MODE_PRIVATE)
-        val phone = mSP.getString(ycj.com.familyledger.ui.KRegisterActivity.Companion.SP_PHONE, "")
-        val password = mSP.getString(ycj.com.familyledger.ui.KRegisterActivity.Companion.SP_PASSWORD, "")
+        val mSP = getSharedPreferences(KRegisterActivity.Companion.SP_APP_NAME, android.content.Context.MODE_PRIVATE)
+        val phone = mSP.getString(KRegisterActivity.Companion.SP_PHONE, "")
+        val password = mSP.getString(KRegisterActivity.Companion.SP_PASSWORD, "")
         if (phone != "" && password != "") {
-            go2Home()
             edxPhone!!.setText(phone)
             edxPassword!!.setText(password)
+//            HttpClientUtils.getInstance(0).login(phone, password, this@KRegisterActivity)
         }
     }
 
@@ -88,16 +89,35 @@ class KRegisterActivity : KBaseActivity() {
 
     override fun initListener() {
         btnGo!!.setOnClickListener {
-            if (edxPhone!!.text.toString().length < 11) {
+            var phone = edxPhone!!.text.toString()
+            var password = edxPassword!!.text.toString()
+            if (phone.length < 11) {
                 toast(getString(ycj.com.familyledger.R.string.error_phone_number))
-            } else if (edxPassword!!.text.toString().length < 6) {
+            } else if (password.length < 3) {
                 toast(getString(ycj.com.familyledger.R.string.password_not_full_six))
             } else {
-                saveData()
-                toast(getString(ycj.com.familyledger.R.string.success_register))
-                go2Home()
+                HttpClientUtils.getInstance(0).login(phone, password, this@KRegisterActivity)
             }
         }
+    }
+
+    override fun onSuccess(data: Any) {
+        data as Users
+        if (data.code == 200) {
+            if (data.data?.loginFlag!!) {
+                toast(getString(ycj.com.familyledger.R.string.success_login))
+            } else {
+                toast(getString(ycj.com.familyledger.R.string.success_register))
+            }
+            saveData()
+            go2Home()
+        } else {
+            toast(data.message)
+        }
+    }
+
+    override fun onFail(msg: String) {
+        toast(getString(ycj.com.familyledger.R.string.fail_login_in))
     }
 
     companion object {
@@ -107,13 +127,14 @@ class KRegisterActivity : KBaseActivity() {
     }
 
     private fun saveData() {
-        val edit = getSharedPreferences(ycj.com.familyledger.ui.KRegisterActivity.Companion.SP_APP_NAME, android.content.Context.MODE_PRIVATE).edit()
-        edit.putString(ycj.com.familyledger.ui.KRegisterActivity.Companion.SP_PHONE, edxPhone!!.text.toString())
-        edit.putString(ycj.com.familyledger.ui.KRegisterActivity.Companion.SP_PASSWORD, edxPassword!!.text.toString())
+        val edit = getSharedPreferences(KRegisterActivity.Companion.SP_APP_NAME, android.content.Context.MODE_PRIVATE).edit()
+        edit.putString(KRegisterActivity.Companion.SP_PHONE, edxPhone!!.text.toString())
+        edit.putString(KRegisterActivity.Companion.SP_PASSWORD, edxPassword!!.text.toString())
         edit.apply()
     }
 
     private fun go2Home() {
         startActivity<KHomeActivity>()
+        finish()
     }
 }

@@ -1,11 +1,18 @@
 package ycj.com.familyledger.http
 
 import android.content.Context
+import android.os.Handler
+import android.os.Message
 import android.util.Log
+import com.alibaba.fastjson.JSON
 import org.apache.commons.httpclient.HttpClient
 import org.apache.commons.httpclient.methods.GetMethod
 import org.apache.commons.httpclient.methods.PostMethod
+import ycj.com.familyledger.Consts
+import ycj.com.familyledger.bean.BaseResponse
 import ycj.com.familyledger.bean.LedgerBean
+import ycj.com.familyledger.bean.Users
+import ycj.com.familyledger.impl.BaseCallBack
 
 /**
  * @author: ycj
@@ -13,7 +20,6 @@ import ycj.com.familyledger.bean.LedgerBean
  * @version V1.0 <>
  */
 class HttpClientUtils {
-    private val BASE_URL = "http://192.168.1.126:8080/webpro1/"
     private val CONTENT_TYPE = "text/plain; charset:UTF-8"
     private var mContext: Context? = null
     private var client: HttpClient? = null
@@ -41,42 +47,46 @@ class HttpClientUtils {
         }
     }
 
-    fun test() {
+    private var callBack: BaseCallBack? = null
+
+    fun login(phone: String, password: String, loginCallBack: BaseCallBack) {
+        callBack = loginCallBack
         Thread(Runnable {
             try {
-                val ss="?phone=1330227123456"
-                val post = PostMethod(BASE_URL + "test.do"+ss)
+                val post = PostMethod(Consts.BASE_URL
+                        + "Login.action?phone=" + phone
+                        + "&password=" + password)
                 post.setRequestHeader("Content-Type", CONTENT_TYPE)
-                doPostRequest(post)
+                client?.executeMethod(post)
+                val result = post.responseBodyAsString
+                val msg = Message.obtain()
+                msg.what = 10000
+                msg.obj = result
+                mHandler.sendMessage(msg)
             } catch (e: Exception) {
                 e.printStackTrace()
+                val msg = Message.obtain()
+                msg.what = 10000
+                msg.obj = ""
+                mHandler.sendMessage(msg)
             }
         }).start()
-    }
-
-    fun login(phoneNumber: String, password: String) {
-        val post = PostMethod(BASE_URL)
-        post.setRequestHeader("Content-Type", CONTENT_TYPE)
-        post.setParameter("phoneNumber", phoneNumber)
-        post.setParameter("password", password)
-        client?.executeMethod(post)
-        doPostRequest(post)
     }
 
     private fun doPostRequest(method: PostMethod) {
         client?.executeMethod(method)
         val result = method.responseBodyAsString
-        Log.i("******", "" + method.uri)
-        Log.i("******", method.responseCharSet + "   \n  " + result)
+        Log.i("******", "" + result)
     }
 
     private fun doGetRequest(method: GetMethod) {
         client?.executeMethod(method)
         val result = method.responseBodyAsString
+        Log.i("******", "" + result)
     }
 
     fun getLedgerList(userId: String) {
-        val post = PostMethod(BASE_URL)
+        val post = PostMethod(Consts.BASE_URL)
         post.setRequestHeader("Content-Type", CONTENT_TYPE)
         post.setParameter("userId", userId)
 //        val client = HttpClient()
@@ -88,7 +98,7 @@ class HttpClientUtils {
 
     //增加记录
     fun addLedger(bean: LedgerBean) {
-        val post = PostMethod(BASE_URL)
+        val post = PostMethod(Consts.BASE_URL)
         post.setRequestHeader("Content-Type", CONTENT_TYPE)
         post.setParameter("cash", bean.cash)
         post.setParameter("time", bean.time)
@@ -101,7 +111,7 @@ class HttpClientUtils {
 
     //增加记录
     fun deleteLedger(id: Long) {
-        val post = PostMethod(BASE_URL)
+        val post = PostMethod(Consts.BASE_URL)
         post.setRequestHeader("Content-Type", CONTENT_TYPE)
         post.setParameter("ledgerId", id.toString())
 //        val client = HttpClient()
@@ -112,7 +122,7 @@ class HttpClientUtils {
     }
 
     fun queryLedger(startDate: String, endDate: String) {
-        val post = PostMethod(BASE_URL)
+        val post = PostMethod(Consts.BASE_URL)
         post.setRequestHeader("Content-Type", CONTENT_TYPE)
         post.setParameter("startDate", startDate)
         post.setParameter("endDate", endDate)
@@ -121,5 +131,43 @@ class HttpClientUtils {
 //        client.httpConnectionManager.params.soTimeout = 1000 * 30
         client?.executeMethod(post)
         val result = post.responseBodyAsString
+    }
+
+    private val mHandler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            val jsonResult = msg.obj as String
+            Log.i("**********", "" + jsonResult)
+            when (msg.what) {
+                10000 -> {//登录注册
+                    try {
+                        if (jsonResult.isEmpty()) callBack?.onFail("网络异常")
+                        val data = JSON.parseObject(jsonResult, Users::class.java)
+                        callBack?.onSuccess(data)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        callBack?.onFail("解析异常")
+                    }
+                }
+                20000 -> {//列表
+                    if (jsonResult.isEmpty()) callBack?.onFail("网络异常")
+                    val data = JSON.parseArray(jsonResult, LedgerBean::class.java)
+                    callBack?.onSuccess(data)
+                }
+                30000 -> {//详情页
+                    if (jsonResult.isEmpty()) callBack?.onFail("网络异常")
+                    val data = JSON.parseObject(jsonResult, LedgerBean::class.java)
+                    callBack?.onSuccess(data)
+                }
+                40000 -> {//添加
+                    if (jsonResult.isEmpty()) callBack?.onFail("网络异常")
+                    val data = JSON.parseObject(jsonResult, BaseResponse::class.java)
+                    callBack?.onSuccess(data)
+                }
+                else -> {
+                    callBack?.onFail("网络异常")
+                }
+            }
+        }
     }
 }
