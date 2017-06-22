@@ -1,12 +1,16 @@
 package ycj.com.familyledger.ui
 
 import org.jetbrains.anko.*
-import ycj.com.familyledger.bean.Users
-import ycj.com.familyledger.http.HttpClientUtils
+import ycj.com.familyledger.Consts
+import ycj.com.familyledger.bean.BaseResponse
+import ycj.com.familyledger.bean.UserBean
+import ycj.com.familyledger.http.HttpUtils
 import ycj.com.familyledger.impl.BaseCallBack
+import ycj.com.familyledger.utils.SPUtils
 
 
-class KRegisterActivity : KBaseActivity(), BaseCallBack {
+class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
+
     private var edxPhone: android.widget.EditText? = null
 
     private var btnGo: android.widget.Button? = null
@@ -14,13 +18,11 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack {
     private var edxPassword: android.widget.EditText? = null
 
     override fun initialize() {
-        val mSP = getSharedPreferences(KRegisterActivity.Companion.SP_APP_NAME, android.content.Context.MODE_PRIVATE)
-        val phone = mSP.getString(KRegisterActivity.Companion.SP_PHONE, "")
-        val password = mSP.getString(KRegisterActivity.Companion.SP_PASSWORD, "")
+        val phone = SPUtils.getInstance().getString(Consts.SP_PHONE)
+        val password = SPUtils.getInstance().getString(Consts.SP_PASSWORD)
         if (phone != "" && password != "") {
             edxPhone!!.setText(phone)
             edxPassword!!.setText(password)
-//            HttpClientUtils.getInstance(0).login(phone, password, this@KRegisterActivity)
         }
     }
 
@@ -89,28 +91,28 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack {
 
     override fun initListener() {
         btnGo!!.setOnClickListener {
-            var phone = edxPhone!!.text.toString()
-            var password = edxPassword!!.text.toString()
+            val phone = edxPhone!!.text.toString()
+            val password = edxPassword!!.text.toString()
             if (phone.length < 11) {
                 toast(getString(ycj.com.familyledger.R.string.error_phone_number))
             } else if (password.length < 3) {
                 toast(getString(ycj.com.familyledger.R.string.password_not_full_six))
             } else {
-                HttpClientUtils.getInstance(0).login(phone, password, this@KRegisterActivity)
+                HttpUtils.getInstance().loginAndRegister(phone, password, this@KRegisterActivity)
             }
         }
     }
 
-    override fun onSuccess(data: Any) {
-        data as Users
+    override fun onSuccess(data: BaseResponse<UserBean>) {
         if (data.code == 200) {
-            if (data.data?.loginFlag!!) {
+            if (data.data?.isLoginFlag as Boolean) {
                 toast(getString(ycj.com.familyledger.R.string.success_login))
             } else {
                 toast(getString(ycj.com.familyledger.R.string.success_register))
             }
-            saveData()
-            go2Home()
+            saveData(data.data!!)
+            startActivity<KHomeActivity>()
+//            finish()
         } else {
             toast(data.message)
         }
@@ -120,21 +122,9 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack {
         toast(getString(ycj.com.familyledger.R.string.fail_login_in))
     }
 
-    companion object {
-        var SP_APP_NAME = "sp_user"
-        var SP_PHONE = "phone"
-        var SP_PASSWORD = "password"
-    }
-
-    private fun saveData() {
-        val edit = getSharedPreferences(KRegisterActivity.Companion.SP_APP_NAME, android.content.Context.MODE_PRIVATE).edit()
-        edit.putString(KRegisterActivity.Companion.SP_PHONE, edxPhone!!.text.toString())
-        edit.putString(KRegisterActivity.Companion.SP_PASSWORD, edxPassword!!.text.toString())
-        edit.apply()
-    }
-
-    private fun go2Home() {
-        startActivity<KHomeActivity>()
-        finish()
+    private fun saveData(user: UserBean) {
+        SPUtils.getInstance().putString(Consts.SP_PHONE, edxPhone!!.text.toString())
+        SPUtils.getInstance().putString(Consts.SP_PASSWORD, edxPassword!!.text.toString())
+        SPUtils.getInstance().putString(Consts.SP_USER_ID, user.userId)
     }
 }

@@ -2,7 +2,6 @@ package ycj.com.familyledger.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -12,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import org.jetbrains.anko.find
 import ycj.com.familyledger.R
+import ycj.com.familyledger.bean.LedgerBean
 import ycj.com.familyledger.impl.ItemTouchCallBack
 
 
@@ -44,22 +44,21 @@ class KHomeAdapter : RecyclerView.Adapter<KHomeAdapter.MyViewHolder>, ItemTouchC
     }
 
     private var mContext: Context
-    private var dataList: ArrayList<String>
+    private var dataList: ArrayList<LedgerBean>
 
-    constructor(dataList: ArrayList<String>, context: Context) {
+    constructor(dataList: ArrayList<LedgerBean>, context: Context) {
         this.mContext = context
         this.dataList = dataList
     }
 
 
     override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
-        holder!!.tvContent.text = dataList[position]
-        holder.tvName.text = dataList[position]
+        holder!!.tvContent.text = dataList[position].time
+        holder.tvName.text = dataList[position].cash
         holder.fy.setOnClickListener {
             listener!!.onItemDelClickListener(position)
         }
         holder.ly.setOnClickListener {
-            Log.i("ycj*******", "dx:   " + dx)
             if (dx > 0) {
                 notifyDataSetChanged()
             } else if (listener != null) {
@@ -97,10 +96,22 @@ class KHomeAdapter : RecyclerView.Adapter<KHomeAdapter.MyViewHolder>, ItemTouchC
         fun onItemDelClickListener(position: Int)
     }
 
-    fun addNewItem(position: Int) {
+    fun addNewItem(position: Int, data: LedgerBean) {
         if (position >= dataList.size) return
-        dataList.add(position, "new Item")
+        dataList.add(position, data)
         notifyItemInserted(position)
+    }
+
+    fun setDatas(data: List<LedgerBean>) {
+        if (data == null || data.size == 0) return
+        dataList.clear()
+        dataList.addAll(data)
+        notifyDataSetChanged()
+    }
+
+    fun clearData() {
+        dataList.clear()
+        notifyDataSetChanged()
     }
 
     fun deleteItem(position: Int) {

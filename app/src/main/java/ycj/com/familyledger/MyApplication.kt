@@ -1,7 +1,8 @@
 package ycj.com.familyledger
 
 import android.app.Application
-import ycj.com.familyledger.http.HttpClientUtils
+import ycj.com.familyledger.http.RetrofitUtils
+import ycj.com.familyledger.utils.SPUtils
 
 /**
  * @author: ycj
@@ -13,6 +14,7 @@ class MyApplication : Application() {
         super.onCreate()
         //TODO:初始化程序
         //缓存Context
-        HttpClientUtils.getInstance(0).init(this)
+        SPUtils.getInstance().init(this)
+        RetrofitUtils.getInstance().init(this)
     }
 }

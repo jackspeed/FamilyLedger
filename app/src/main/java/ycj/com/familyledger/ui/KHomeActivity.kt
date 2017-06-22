@@ -1,57 +1,55 @@
 package ycj.com.familyledger.ui
 
+import android.support.design.widget.FloatingActionButton
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.view.View
+import android.widget.ImageView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import ycj.com.familyledger.Consts
+import ycj.com.familyledger.adapter.KHomeAdapter
+import ycj.com.familyledger.bean.BaseResponse
+import ycj.com.familyledger.bean.LedgerBean
+import ycj.com.familyledger.http.HttpUtils
+import ycj.com.familyledger.impl.IAddLedger
+import ycj.com.familyledger.impl.IGetLedgerList
+import ycj.com.familyledger.utils.RItemTouchHelper
 import ycj.com.familyledger.utils.RecyclerViewItemDiv
+import ycj.com.familyledger.utils.SPUtils
+import ycj.com.familyledger.view.EdxDialog
 
 
-class KHomeActivity : KBaseActivity(), ycj.com.familyledger.adapter.KHomeAdapter.ItemClickListener, ycj.com.familyledger.view.EdxDialog.DataCallBack, android.view.View.OnClickListener {
-    private var lView: android.support.v7.widget.RecyclerView? = null
+class KHomeActivity : KBaseActivity(),
+        KHomeAdapter.ItemClickListener,
+        EdxDialog.DataCallBack,
+        View.OnClickListener, IGetLedgerList, IAddLedger {
+    private val isAdd: Boolean = false
+    private var lView: RecyclerView? = null
 
-    private var data: java.util.ArrayList<String> = java.util.ArrayList()
+    private var data: ArrayList<LedgerBean> = ArrayList()
 
-    private var fBtn: android.support.design.widget.FloatingActionButton? = null
+    private var fBtn: FloatingActionButton? = null
 
-    private var rightBtn: android.widget.ImageView? = null
+    private var rightBtn: ImageView? = null
 
-    companion object {
-
-        val DATA_ID = "id"
-    }
-
-    private var mAdapter: ycj.com.familyledger.adapter.KHomeAdapter? = null
+    private var mAdapter: KHomeAdapter? = null
 
     override fun initialize() {
-        for (i in 0..200) {
-            data.add("WHILE 循环" + i)
-        }
-        mAdapter?.notifyDataSetChanged()
-    }
-
-    private fun setData() {
-        mAdapter = ycj.com.familyledger.adapter.KHomeAdapter(data, this)
-        //分割线
-        lView?.addItemDecoration(RecyclerViewItemDiv(this@KHomeActivity, LinearLayoutManager.VERTICAL))
-        lView?.adapter = mAdapter
-        lView?.layoutManager = android.support.v7.widget.LinearLayoutManager(this@KHomeActivity)
-        //滑动监听
-        lView?.overScrollMode = android.view.View.OVER_SCROLL_NEVER
-        lView?.itemAnimator = android.support.v7.widget.DefaultItemAnimator() as android.support.v7.widget.RecyclerView.ItemAnimator?//设置Item增加、移除动画
-
-        val callBack = ycj.com.familyledger.utils.RItemTouchHelper(mAdapter!!)
-        val helpers = android.support.v7.widget.helper.ItemTouchHelper(callBack)
-        helpers.attachToRecyclerView(lView)
+        val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
+        HttpUtils.getInstance().getLedgerList(userId, this)
     }
 
     override fun initListener() {
-        setData()
-        lView?.setOnScrollListener(object : android.support.v7.widget.RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: android.support.v7.widget.RecyclerView?, dx: Int, dy: Int) {
+
+        lView?.setOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 android.util.Log.i("ycj onScrolled", "" + dx + "       " + dy)
-                if (lView?.scrollState == android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING) {
+                if (lView?.scrollState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     if (dy > 0) {
                         fBtn?.hide()
                     } else {
@@ -60,11 +58,11 @@ class KHomeActivity : KBaseActivity(), ycj.com.familyledger.adapter.KHomeAdapter
                 }
             }
 
-            override fun onScrollStateChanged(recyclerView: android.support.v7.widget.RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 android.util.Log.i("ycj ScrollChanged", "" + newState)
                 //==1,显示
-                if (newState == android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     fBtn?.show()
                 }
             }
@@ -76,7 +74,8 @@ class KHomeActivity : KBaseActivity(), ycj.com.familyledger.adapter.KHomeAdapter
 
     //输入框返回
     override fun callBack(dates: String, cashs: String) {
-        android.util.Log.i("ycj", "" + dates + "---------" + cashs)
+        val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
+        HttpUtils.getInstance().addLedger(userId, dates, cashs, this)
     }
 
     override fun onItemClickListener(position: Int) {
@@ -96,12 +95,34 @@ class KHomeActivity : KBaseActivity(), ycj.com.familyledger.adapter.KHomeAdapter
         }
     }
 
-    private fun go2Detail(position: Int) {
-        val intent = android.content.Intent(KHomeActivity@ this, KLedgerDetailActivity::class.java)
-        intent.putExtra(ycj.com.familyledger.ui.KHomeActivity.Companion.DATA_ID, position)
-        startActivity(intent)
+    override fun onAddSuccess(data: BaseResponse<LedgerBean>) {
+        toast("添加成功")
+        mAdapter?.addNewItem(0, data.data!!)
     }
 
+    override fun onSuccess(data: BaseResponse<List<LedgerBean>>) {
+        if (data.data == null || data.data!!.isEmpty()) {
+            mAdapter?.clearData()
+            toast("暂无数据")
+        } else {
+            mAdapter?.setDatas(data.data!!)
+        }
+    }
+
+    override fun onFail(msg: String) {
+        mAdapter?.clearData()
+        toast("获取失败")
+    }
+
+    override fun onAddFail(msg: String) {
+        toast("添加失败")
+    }
+
+    private fun go2Detail(position: Int) {
+        val intent = android.content.Intent(KHomeActivity@ this, KLedgerDetailActivity::class.java)
+        intent.putExtra(Consts.DATA_ID, position)
+        startActivity(intent)
+    }
 
     override fun initView() {
         relativeLayout {
@@ -137,6 +158,19 @@ class KHomeActivity : KBaseActivity(), ycj.com.familyledger.adapter.KHomeAdapter
                 rightMargin = dip(20)
             }
         }
+
+        mAdapter = KHomeAdapter(data, this)
+        //分割线
+        lView?.addItemDecoration(RecyclerViewItemDiv(this@KHomeActivity, LinearLayoutManager.VERTICAL))
+        lView?.adapter = mAdapter
+        lView?.layoutManager = LinearLayoutManager(this@KHomeActivity)
+        //滑动监听
+        lView?.overScrollMode = android.view.View.OVER_SCROLL_NEVER
+        lView?.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?//设置Item增加、移除动画
+
+        val callBack = RItemTouchHelper(mAdapter!!)
+        val helpers = ItemTouchHelper(callBack)
+        helpers.attachToRecyclerView(lView)
     }
 
 }

@@ -101,9 +101,13 @@ class EdxDialog {
         tvOk?.setOnClickListener {
             val dates = edxDate?.editableText.toString()
             val cashs = edxCash?.editableText.toString()
-            //TODO:数据规则匹配
-            callBack.callBack(dates, cashs)
-            dialog.dismiss()
+            if (dates.length < 6 || cashs == "") {
+                context.toast("数据有误")
+            } else {
+                //TODO:数据规则匹配
+                callBack.callBack(dates, cashs)
+                dialog.dismiss()
+            }
         }
         edxCash?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
