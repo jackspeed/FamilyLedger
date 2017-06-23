@@ -12,4 +12,5 @@ object Consts {
     const val SP_PASSWORD = "password"
     const val SP_USER_ID = "userId"
     const val DATA_ID = "id"
+    const val DATA_BEAN = "bean"
 }

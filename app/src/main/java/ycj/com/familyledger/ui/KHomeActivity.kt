@@ -1,32 +1,36 @@
 package ycj.com.familyledger.ui
 
+import android.os.SystemClock
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import android.widget.ImageView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 import ycj.com.familyledger.Consts
+import ycj.com.familyledger.R
 import ycj.com.familyledger.adapter.KHomeAdapter
 import ycj.com.familyledger.bean.BaseResponse
 import ycj.com.familyledger.bean.LedgerBean
 import ycj.com.familyledger.http.HttpUtils
 import ycj.com.familyledger.impl.IAddLedger
+import ycj.com.familyledger.impl.IDeleteCallBack
 import ycj.com.familyledger.impl.IGetLedgerList
-import ycj.com.familyledger.utils.RItemTouchHelper
 import ycj.com.familyledger.utils.RecyclerViewItemDiv
 import ycj.com.familyledger.utils.SPUtils
 import ycj.com.familyledger.view.EdxDialog
+import java.util.*
 
 
 class KHomeActivity : KBaseActivity(),
         KHomeAdapter.ItemClickListener,
         EdxDialog.DataCallBack,
         View.OnClickListener, IGetLedgerList, IAddLedger {
+
+    private var trigleCancel: Long = 0
     private val isAdd: Boolean = false
     private var lView: RecyclerView? = null
 
@@ -39,8 +43,9 @@ class KHomeActivity : KBaseActivity(),
     private var mAdapter: KHomeAdapter? = null
 
     override fun initialize() {
-        val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
-        HttpUtils.getInstance().getLedgerList(userId, this)
+        showLoading()
+//      val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
+        HttpUtils.getInstance().getLedgerList("", this)
     }
 
     override fun initListener() {
@@ -82,14 +87,30 @@ class KHomeActivity : KBaseActivity(),
         go2Detail(position)
     }
 
-    override fun onItemDelClickListener(position: Int) {
-        android.util.Log.i("ycj", "position: " + position)
+    override fun onItemLongClickListener(position: Int) {
+        showTips(getString(R.string.sure_delete), object : OnTipsCallBack {
+            override fun positiveClick() {
+                HttpUtils.getInstance().deleteLedger(data[position].id, object : IDeleteCallBack {
+                    override fun onDeleteFail(failMsg: String) {
+                        toast(getString(R.string.fail_delete))
+                    }
 
+                    override fun onDeleteSuccess(data: BaseResponse<LedgerBean>) {
+                        toast(getString(R.string.success_delete))
+                        this@KHomeActivity.data.removeAt(position)
+                        mAdapter?.notifyDataSetChanged()
+                    }
+                })
+            }
+        })
     }
 
     override fun onClick(v: android.view.View?) {
         when (v?.id) {
-            ycj.com.familyledger.R.id.img_right_home -> toast("搜索")
+            ycj.com.familyledger.R.id.img_right_home -> {
+                showLoading()
+                toast("搜索")
+            }
             ycj.com.familyledger.R.id.btn_home_add -> ycj.com.familyledger.view.EdxDialog.Companion.create()
                     .showEdxDialog("请输入信息", this@KHomeActivity, this@KHomeActivity)
         }
@@ -97,10 +118,12 @@ class KHomeActivity : KBaseActivity(),
 
     override fun onAddSuccess(data: BaseResponse<LedgerBean>) {
         toast("添加成功")
-        mAdapter?.addNewItem(0, data.data!!)
+        hideLoading()
+        this.initialize()
     }
 
     override fun onSuccess(data: BaseResponse<List<LedgerBean>>) {
+        hideLoading()
         if (data.data == null || data.data!!.isEmpty()) {
             mAdapter?.clearData()
             toast("暂无数据")
@@ -110,17 +133,20 @@ class KHomeActivity : KBaseActivity(),
     }
 
     override fun onFail(msg: String) {
+        hideLoading()
         mAdapter?.clearData()
         toast("获取失败")
     }
 
     override fun onAddFail(msg: String) {
+        hideLoading()
         toast("添加失败")
     }
 
     private fun go2Detail(position: Int) {
         val intent = android.content.Intent(KHomeActivity@ this, KLedgerDetailActivity::class.java)
         intent.putExtra(Consts.DATA_ID, position)
+        intent.putExtra(Consts.DATA_BEAN, data[position])
         startActivity(intent)
     }
 
@@ -168,9 +194,30 @@ class KHomeActivity : KBaseActivity(),
         lView?.overScrollMode = android.view.View.OVER_SCROLL_NEVER
         lView?.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?//设置Item增加、移除动画
 
-        val callBack = RItemTouchHelper(mAdapter!!)
-        val helpers = ItemTouchHelper(callBack)
-        helpers.attachToRecyclerView(lView)
+//        val callBack = RItemTouchHelper(mAdapter!!)
+//        val helpers = ItemTouchHelper(callBack)
+//        helpers.attachToRecyclerView(lView)
     }
 
+
+    /**
+     * 按后退键时
+     */
+    override fun onBackPressed() {
+        // “提示再按一次可退出..”
+        toastExtrance()
+    }
+
+    /**
+     * 双击退出提醒
+     */
+    protected fun toastExtrance() {
+        val uptimeMillis = SystemClock.uptimeMillis()
+        if (uptimeMillis - trigleCancel > 2000) {
+            trigleCancel = uptimeMillis
+            toast(getString(R.string.note_exit))
+        } else {
+            finish()
+        }
+    }
 }

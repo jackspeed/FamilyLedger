@@ -1,12 +1,13 @@
 package ycj.com.familyledger.http
 
-import android.content.Context
+import android.util.Log
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import ycj.com.familyledger.bean.LedgerBean
 import ycj.com.familyledger.bean.UserBean
 import ycj.com.familyledger.impl.BaseCallBack
 import ycj.com.familyledger.impl.IAddLedger
+import ycj.com.familyledger.impl.IDeleteCallBack
 import ycj.com.familyledger.impl.IGetLedgerList
 
 /**
@@ -15,10 +16,6 @@ import ycj.com.familyledger.impl.IGetLedgerList
  * @version V1.0 <>
  */
 class HttpUtils {
-    private var mContext: Context? = null
-    fun init(context: Context) {
-        this.mContext = context
-    }
 
     companion object {
         fun getInstance() = Holder.instance
@@ -37,10 +34,11 @@ class HttpUtils {
                 .doOnSubscribe { }
                 .subscribe({
                     result ->
+                    Log.i("ycj", result.toString())
                     callback.onSuccess(result)
                 }) {
                     throwable ->
-                    print(throwable.toString())
+                    Log.i("ycj", throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }
@@ -50,32 +48,32 @@ class HttpUtils {
                 .getLedgerList(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { println("call…………………………") }
+                .doOnSubscribe { }
                 .subscribe({
                     result ->
-                    print(result.toString())
+                    Log.i("ycj", result.toString())
                     callback.onSuccess(result)
                 }) {
                     throwable ->
-                    println(throwable.toString())
+                    Log.i("ycj", throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }
 
-    fun deleteLedger(id: Int, callback: BaseCallBack<LedgerBean>) {
+    fun deleteLedger(id: Int, callback: IDeleteCallBack) {
         RetrofitUtils.getInstance()
                 .deleteLedger(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { println("call…………………………") }
+                .doOnSubscribe { }
                 .subscribe({
                     result ->
-                    print(result.toString())
-                    callback.onSuccess(result)
+                    Log.i("ycj", result.toString())
+                    callback.onDeleteSuccess(result)
                 }) {
                     throwable ->
-                    println(throwable.toString())
-                    callback.onFail(throwable.message.toString())
+                    Log.i("ycj", throwable.toString())
+                    callback.onDeleteFail(throwable.message.toString())
                 }
     }
 
@@ -84,14 +82,14 @@ class HttpUtils {
                 .addLedger(userId, time, cash)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { println("call…………………………") }
+                .doOnSubscribe { }
                 .subscribe({
                     result ->
-                    print(result.toString())
+                    Log.i("ycj", result.toString())
                     callback.onAddSuccess(result)
                 }) {
                     throwable ->
-                    println(throwable.toString())
+                    Log.i("ycj", throwable.toString())
                     callback.onAddFail(throwable.message.toString())
                 }
     }
@@ -104,11 +102,11 @@ class HttpUtils {
                 .doOnSubscribe {}
                 .subscribe({
                     result ->
-                    print(result.toString())
+                    Log.i("ycj", result.toString())
                     callback.onSuccess(result)
                 }) {
                     throwable ->
-                    println(throwable.toString())
+                    Log.i("ycj", throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }

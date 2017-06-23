@@ -4,20 +4,25 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
 import org.jetbrains.anko.*
 import ycj.com.familyledger.Consts
 import ycj.com.familyledger.R
+import ycj.com.familyledger.bean.LedgerBean
 
 class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener {
-
-
     private var id: Int = 0
-
     private var backLayout: RelativeLayout? = null
 
+    private var dataBean: LedgerBean? = null
+
     override fun initialize() {
-        id = intent.getIntExtra(Consts.DATA_ID, 0)
+        dataBean = intent.getParcelableExtra<LedgerBean>(Consts.DATA_BEAN) as LedgerBean
+        id = dataBean!!.id
+        tvContent?.text = dataBean.toString()
     }
+
+    private var tvContent: TextView? = null
 
     override fun initView() {
         verticalLayout {
@@ -39,7 +44,7 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener {
                 }.lparams(height = matchParent, width = dip(48))
             }.lparams(height = dip(48), width = matchParent)
             relativeLayout {
-                textView("详情页") {
+                tvContent = textView {
                     textSize = resources.getDimension(R.dimen.title_text_size)
                     textColor = resources.getColor(R.color.black_text)
                 }.lparams(height = wrapContent, width = wrapContent) {

@@ -105,14 +105,13 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
 
     override fun onSuccess(data: BaseResponse<UserBean>) {
         if (data.code == 200) {
-            if (data.data?.isLoginFlag as Boolean) {
+            if (data.data?.loginFlag as Boolean) {
                 toast(getString(ycj.com.familyledger.R.string.success_login))
             } else {
                 toast(getString(ycj.com.familyledger.R.string.success_register))
             }
             saveData(data.data!!)
             startActivity<KHomeActivity>()
-//            finish()
         } else {
             toast(data.message)
         }
