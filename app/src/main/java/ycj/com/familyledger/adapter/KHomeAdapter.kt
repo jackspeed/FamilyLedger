@@ -29,8 +29,9 @@ class KHomeAdapter : RecyclerView.Adapter<KHomeAdapter.MyViewHolder> {
 
 
     override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
-        holder!!.tvContent.text = dataList[position].time
-        holder.tvName.text = dataList[position].cash
+        holder!!.tvTitle.text = mContext.getString(R.string.date) + "  " + dataList[position].time
+        holder.tvContent.text = mContext.getString(R.string.cash) + "  " + dataList[position].time
+        holder.tvPhone.text = dataList[position].userId
 
         holder.ly.setOnClickListener {
             if (listener != null) {
@@ -55,10 +56,12 @@ class KHomeAdapter : RecyclerView.Adapter<KHomeAdapter.MyViewHolder> {
     }
 
     class MyViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        var tvName: TextView = itemView!!.find(R.id.t_title_home)
+        var tvTitle: TextView = itemView!!.find(R.id.t_title_home)
         var tvContent: TextView = itemView!!.find(R.id.t_content_home)
+        var tvPhone: TextView = itemView!!.find(R.id.tv_phone_home)
         var ly: LinearLayout = itemView!!.find(R.id.ly_list_item_home)
         var fy: FrameLayout = itemView!!.find(R.id.fy_list_item_home)
+
     }
 
 

@@ -16,4 +16,5 @@ class NetWorkUtils {
             return currentNet.isAvailable
         }
     }
+
 }

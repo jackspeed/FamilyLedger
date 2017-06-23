@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import org.jetbrains.anko.*
 import ycj.com.familyledger.R
+import ycj.com.familyledger.utils.RegexUtils
 
 /**
  * @author: ycj
@@ -59,10 +60,10 @@ class EdxDialog {
                     maxLines = 1
                     textSize = sp(8).toFloat()
                     inputType = InputType.TYPE_DATETIME_VARIATION_DATE or InputType.TYPE_CLASS_DATETIME
-                    filters = arrayOf<InputFilter>(InputFilter.LengthFilter(11))
+                    filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
                     background = context.resources.getDrawable(R.drawable.edx_input_bg)
                     hintTextColor = context.resources.getColor(R.color.gray_text)
-                    hint = "请输入日期"
+                    hint = "日期模板 2017-06-23"
                 }.lparams(width = matchParent, height = dip(40)) {
                     rightMargin = dip(20)
                     leftMargin = dip(20)
@@ -103,10 +104,11 @@ class EdxDialog {
             val cashs = edxCash?.editableText.toString()
             if (dates.length < 6 || cashs == "") {
                 context.toast("数据有误")
-            } else {
-                //TODO:数据规则匹配
+            } else if (RegexUtils.create().isDate(dates)) {
                 callBack.callBack(dates, cashs)
                 dialog.dismiss()
+            } else {
+                context.toast("日期格式不正确")
             }
         }
         edxCash?.addTextChangedListener(object : TextWatcher {

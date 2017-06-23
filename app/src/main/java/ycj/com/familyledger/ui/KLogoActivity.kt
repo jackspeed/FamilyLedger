@@ -8,6 +8,7 @@ import ycj.com.familyledger.bean.BaseResponse
 import ycj.com.familyledger.bean.UserBean
 import ycj.com.familyledger.http.HttpUtils
 import ycj.com.familyledger.impl.BaseCallBack
+import ycj.com.familyledger.utils.RegexUtils
 import ycj.com.familyledger.utils.SPUtils
 
 class KLogoActivity : KBaseActivity(), BaseCallBack<UserBean> {
@@ -16,7 +17,7 @@ class KLogoActivity : KBaseActivity(), BaseCallBack<UserBean> {
         android.os.Handler().postDelayed({
             val phone = SPUtils.getInstance().getString(Consts.SP_PHONE)
             val password = SPUtils.getInstance().getString(Consts.SP_PASSWORD)
-            if (phone == null || phone == "" || password == null || password == "") {
+            if (phone == null || phone == "" || password == null || password == "" || !RegexUtils.create().isMobileExact(phone)) {
                 loginFail()
                 hideLoading()
             } else {

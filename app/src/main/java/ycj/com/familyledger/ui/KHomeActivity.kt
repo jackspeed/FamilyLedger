@@ -1,12 +1,14 @@
 package ycj.com.familyledger.ui
 
+import android.content.Intent
 import android.os.SystemClock
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.View
-import android.widget.ImageView
+import android.widget.TextView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -31,29 +33,25 @@ class KHomeActivity : KBaseActivity(),
         View.OnClickListener, IGetLedgerList, IAddLedger {
 
     private var trigleCancel: Long = 0
-    private val isAdd: Boolean = false
+    private var selfData: Boolean = true
     private var lView: RecyclerView? = null
 
     private var data: ArrayList<LedgerBean> = ArrayList()
 
     private var fBtn: FloatingActionButton? = null
 
-    private var rightBtn: ImageView? = null
-
     private var mAdapter: KHomeAdapter? = null
 
     override fun initialize() {
         showLoading()
-//      val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
         HttpUtils.getInstance().getLedgerList("", this)
     }
 
     override fun initListener() {
-
+        backLayout?.setOnClickListener(this)
         lView?.setOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                android.util.Log.i("ycj onScrolled", "" + dx + "       " + dy)
                 if (lView?.scrollState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     if (dy > 0) {
                         fBtn?.hide()
@@ -74,7 +72,6 @@ class KHomeActivity : KBaseActivity(),
         })
         mAdapter?.setOnItemClickListener(this)
         fBtn?.setOnClickListener(this)
-        rightBtn?.setOnClickListener(this)
     }
 
     //输入框返回
@@ -107,11 +104,13 @@ class KHomeActivity : KBaseActivity(),
 
     override fun onClick(v: android.view.View?) {
         when (v?.id) {
-            ycj.com.familyledger.R.id.img_right_home -> {
+            R.id.layout_back -> {
                 showLoading()
-                toast("搜索")
+                val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
+                HttpUtils.getInstance().getLedgerList(if (selfData) userId else "", this)
+                selfData = !selfData
             }
-            ycj.com.familyledger.R.id.btn_home_add -> ycj.com.familyledger.view.EdxDialog.Companion.create()
+            R.id.btn_home_add -> EdxDialog.Companion.create()
                     .showEdxDialog("请输入信息", this@KHomeActivity, this@KHomeActivity)
         }
     }
@@ -147,44 +146,47 @@ class KHomeActivity : KBaseActivity(),
         val intent = android.content.Intent(KHomeActivity@ this, KLedgerDetailActivity::class.java)
         intent.putExtra(Consts.DATA_ID, position)
         intent.putExtra(Consts.DATA_BEAN, data[position])
-        startActivity(intent)
+        startActivityForResult(intent, 100)
     }
+
+    private var backLayout: TextView? = null
 
     override fun initView() {
         relativeLayout {
-            lparams(height = org.jetbrains.anko.matchParent, width = org.jetbrains.anko.matchParent)
+            lparams(height = matchParent, width = matchParent)
             relativeLayout {
-                id = ycj.com.familyledger.R.id.layout_title
-                backgroundResource = ycj.com.familyledger.R.color.color_title_bar
+                id = R.id.layout_title
+                backgroundResource = R.color.color_title_bar
                 textView("伐木雷") {
-                    textSize = resources.getDimension(ycj.com.familyledger.R.dimen.title_text_size)
-                    textColor = resources.getColor(ycj.com.familyledger.R.color.white)
-                }.lparams(height = org.jetbrains.anko.wrapContent, width = org.jetbrains.anko.wrapContent) {
+                    textSize = resources.getDimension(R.dimen.title_text_size)
+                    textColor = resources.getColor(R.color.white)
+                }.lparams(height = wrapContent, width = wrapContent) {
                     centerInParent()
                 }
-                rightBtn = imageView {
-                    id = ycj.com.familyledger.R.id.img_right_home
-                    imageResource = android.R.drawable.ic_menu_search
-                }.lparams(width = dip(24), height = dip(24)) {
+                backLayout = textView("筛选") {
+                    id = R.id.layout_back
+                    gravity = Gravity.CENTER
+                    textColor = resources.getColor(R.color.white)
+                    backgroundResource = R.drawable.bg_btn
+                }.lparams(width = dip(48), height = matchParent) {
+                    centerInParent()
                     alignParentRight()
-                    centerVertically()
-                    rightMargin = dip(16)
                 }
-            }.lparams(height = dip(48), width = org.jetbrains.anko.matchParent)
+
+            }.lparams(height = dip(48), width = matchParent)
             lView = recyclerView {
-                id = ycj.com.familyledger.R.id.list_view_home
-            }.lparams(width = org.jetbrains.anko.matchParent, height = org.jetbrains.anko.matchParent) { below(ycj.com.familyledger.R.id.layout_title) }
+                id = R.id.list_view_home
+            }.lparams(width = matchParent, height = matchParent) { below(R.id.layout_title) }
             fBtn = floatingActionButton {
-                id = ycj.com.familyledger.R.id.btn_home_add
+                id = R.id.btn_home_add
                 imageResource = android.R.drawable.ic_menu_add
-            }.lparams(width = org.jetbrains.anko.wrapContent, height = org.jetbrains.anko.wrapContent) {
+            }.lparams(width = wrapContent, height = wrapContent) {
                 alignParentRight()
                 alignParentBottom()
                 bottomMargin = dip(20)
                 rightMargin = dip(20)
             }
         }
-
         mAdapter = KHomeAdapter(data, this)
         //分割线
         lView?.addItemDecoration(RecyclerViewItemDiv(this@KHomeActivity, LinearLayoutManager.VERTICAL))
@@ -199,25 +201,26 @@ class KHomeActivity : KBaseActivity(),
 //        helpers.attachToRecyclerView(lView)
     }
 
-
-    /**
-     * 按后退键时
-     */
+    //按后退键时
     override fun onBackPressed() {
-        // “提示再按一次可退出..”
-        toastExtrance()
+        toastExtrance() // “提示再按一次可退出..”
     }
 
-    /**
-     * 双击退出提醒
-     */
-    protected fun toastExtrance() {
+    //双击退出提醒
+    fun toastExtrance() {
         val uptimeMillis = SystemClock.uptimeMillis()
         if (uptimeMillis - trigleCancel > 2000) {
             trigleCancel = uptimeMillis
             toast(getString(R.string.note_exit))
         } else {
             finish()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Consts.ACTIVITY_RESULT_REFRESH) {
+            initialize()
         }
     }
 }

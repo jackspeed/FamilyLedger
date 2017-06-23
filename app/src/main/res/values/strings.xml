@@ -14,4 +14,13 @@
     <string name="tips">提示</string>
     <string name="fail_delete">删除失败</string>
     <string name="success_delete">删除成功</string>
+    <string name="cash">金额</string>
+    <string name="date">日期</string>
+    <string name="phone">手机号</string>
+    <string name="save">保存</string>
+    <string name="edit">编辑</string>
+    <string name="success_update">修改成功</string>
+    <string name="fail_update">修改失败</string>
+    <string name="not_format_to_date">日期格式不正确</string>
+    <string name="not_phone_number">手机号码格式不正确</string>
 </resources>
