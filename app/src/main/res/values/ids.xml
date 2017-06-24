@@ -6,6 +6,7 @@
     <item name="edx_password_main" type="id" />
     <item name="layout_title" type="id" />
     <item name="list_view_home" type="id" />
+    <item name="list_view_cal" type="id" />
 
     <item name="edx_date_add" type="id" />
     <item name="edx_cash_add" type="id" />
@@ -15,6 +16,10 @@
 
     <item name="layout_back" type="id" />
 
+    <item name="layout_split" type="id" />
+
     <item name="tv_edit_save" type="id" />
+
+    <item name="layout_left_title_home" type="id" />
 
 </resources>

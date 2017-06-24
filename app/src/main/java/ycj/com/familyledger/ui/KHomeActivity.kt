@@ -48,7 +48,10 @@ class KHomeActivity : KBaseActivity(),
     }
 
     override fun initListener() {
-        backLayout?.setOnClickListener(this)
+        leftLayout?.setOnClickListener(this)
+        splitLayout?.setOnClickListener(this)
+        mAdapter?.setOnItemClickListener(this)
+        fBtn?.setOnClickListener(this)
         lView?.setOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -70,8 +73,6 @@ class KHomeActivity : KBaseActivity(),
                 }
             }
         })
-        mAdapter?.setOnItemClickListener(this)
-        fBtn?.setOnClickListener(this)
     }
 
     //输入框返回
@@ -104,7 +105,10 @@ class KHomeActivity : KBaseActivity(),
 
     override fun onClick(v: android.view.View?) {
         when (v?.id) {
-            R.id.layout_back -> {
+            R.id.layout_left_title_home -> {
+                go2Calculate()
+            }
+            R.id.layout_split -> {
                 showLoading()
                 val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
                 HttpUtils.getInstance().getLedgerList(if (selfData) userId else "", this)
@@ -149,7 +153,15 @@ class KHomeActivity : KBaseActivity(),
         startActivityForResult(intent, 100)
     }
 
-    private var backLayout: TextView? = null
+    private fun go2Calculate() {
+        val intent = android.content.Intent(KHomeActivity@ this, KCalculateActivity::class.java)
+        intent.putExtra(Consts.LIST_DATA, data)
+        startActivity(intent)
+    }
+
+    private var splitLayout: TextView? = null
+
+    private var leftLayout: TextView? = null
 
     override fun initView() {
         relativeLayout {
@@ -163,8 +175,8 @@ class KHomeActivity : KBaseActivity(),
                 }.lparams(height = wrapContent, width = wrapContent) {
                     centerInParent()
                 }
-                backLayout = textView("筛选") {
-                    id = R.id.layout_back
+                splitLayout = textView("筛选") {
+                    id = R.id.layout_split
                     gravity = Gravity.CENTER
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.drawable.bg_btn
@@ -172,7 +184,12 @@ class KHomeActivity : KBaseActivity(),
                     centerInParent()
                     alignParentRight()
                 }
-
+                leftLayout = textView("结账") {
+                    id = R.id.layout_left_title_home
+                    gravity = Gravity.CENTER
+                    textColor = resources.getColor(R.color.white)
+                    backgroundResource = R.drawable.bg_btn
+                }.lparams(width = dip(48), height = matchParent)
             }.lparams(height = dip(48), width = matchParent)
             lView = recyclerView {
                 id = R.id.list_view_home

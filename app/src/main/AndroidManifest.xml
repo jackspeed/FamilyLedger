@@ -25,6 +25,7 @@
         <activity android:name=".ui.KHomeActivity" />
         <activity android:name=".ui.KRegisterActivity" />
         <activity android:name=".ui.KLedgerDetailActivity" />
+        <activity android:name=".ui.KCalculateActivity"></activity>
     </application>
 
 </manifest>

@@ -8,7 +8,7 @@ import android.os.Parcelable
  * @date: 2017-06-20 17:13
  * @version V1.0 <>
  */
-class LedgerBean(val id: Int, val time: String, val cash: String, val userId: String) : Parcelable {
+data class LedgerBean(val id: Int, val time: String, val cash: String, val userId: String) : Parcelable {
     override fun toString(): String {
         return "LedgerBean(id=$id, time='$time', cash='$cash', userId='$userId')"
     }
@@ -21,10 +21,10 @@ class LedgerBean(val id: Int, val time: String, val cash: String, val userId: St
     }
 
     constructor(source: Parcel) : this(
-    source.readInt(),
-    source.readString(),
-    source.readString(),
-    source.readString()
+            source.readInt(),
+            source.readString(),
+            source.readString(),
+            source.readString()
     )
 
     override fun describeContents() = 0
