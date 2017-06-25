@@ -14,6 +14,8 @@ import android.widget.TextView
 import org.jetbrains.anko.*
 import ycj.com.familyledger.R
 import ycj.com.familyledger.utils.RegexUtils
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author: ycj
@@ -63,7 +65,7 @@ class EdxDialog {
                     filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
                     background = context.resources.getDrawable(R.drawable.edx_input_bg)
                     hintTextColor = context.resources.getColor(R.color.gray_text)
-                    hint = "日期模板 2017-06-23"
+                    hint = "日期模板 2017-06-20"
                 }.lparams(width = matchParent, height = dip(40)) {
                     rightMargin = dip(20)
                     leftMargin = dip(20)
@@ -99,6 +101,9 @@ class EdxDialog {
                 alignParentBottom()
             }
         }
+        val date = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(Date())
+        edxDate?.setText(date)
+        edxDate?.setSelection(date.length)
         tvOk?.setOnClickListener {
             val dates = edxDate?.editableText.toString()
             val cashs = edxCash?.editableText.toString()

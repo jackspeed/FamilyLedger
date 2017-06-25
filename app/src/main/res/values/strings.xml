@@ -29,5 +29,6 @@
     <string name="total_cash">本月总额&#160;&#160;&#160;&#160;</string>
     <string name="income">收入</string>
     <string name="pay">支出</string>
+    <string name="error_user_name">用户名不正确</string>
 
 </resources>

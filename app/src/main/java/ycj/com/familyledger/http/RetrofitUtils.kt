@@ -83,8 +83,11 @@ class RetrofitUtils private constructor() : Interceptor {
         }
     }
 
-    fun loginAndRegister(phone: String, password: String): Observable<BaseResponse<UserBean>>
-            = service!!.loginAndRegister(phone, password)
+    fun loginAndRegister(userName: String, phone: String, password: String): Observable<BaseResponse<UserBean>>
+            = service!!.loginAndRegister(userName, phone, password)
+
+    fun getUserList(): Observable<BaseResponse<List<UserBean>>>
+            = service!!.getUserList()
 
     fun getLedgerList(userId: String): Observable<BaseResponse<List<LedgerBean>>>
             = service!!.getLedgerList(userId)

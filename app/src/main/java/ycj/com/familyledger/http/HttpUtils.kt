@@ -26,9 +26,9 @@ class HttpUtils {
     }
 
 
-    fun loginAndRegister(phone: String, password: String, callback: BaseCallBack<UserBean>) {
+    fun loginAndRegister(userName: String, phone: String, password: String, callback: BaseCallBack<UserBean>) {
         RetrofitUtils.getInstance()
-                .loginAndRegister(phone, password)
+                .loginAndRegister(userName, phone, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { }
@@ -46,6 +46,23 @@ class HttpUtils {
     fun getLedgerList(userId: String, callback: IGetLedgerList) {
         RetrofitUtils.getInstance()
                 .getLedgerList(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { }
+                .subscribe({
+                    result ->
+                    Log.i("ycj", result.toString())
+                    callback.onSuccess(result)
+                }) {
+                    throwable ->
+                    Log.i("ycj", throwable.toString())
+                    callback.onFail(throwable.message.toString())
+                }
+    }
+
+    fun getUserList(callback: BaseCallBack<List<UserBean>>) {
+        RetrofitUtils.getInstance()
+                .getUserList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { }

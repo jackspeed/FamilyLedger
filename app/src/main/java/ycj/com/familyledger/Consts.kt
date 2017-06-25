@@ -9,6 +9,7 @@ object Consts {
     const val BASE_URL = "http://192.168.1.104:8080/person/"
     const val SP_APP_NAME = "sp_user"
     const val SP_PHONE = "phone"
+    const val SP_USER_NAME = "userName"
     const val SP_PASSWORD = "password"
     const val SP_USER_ID = "userId"
     const val DATA_ID = "id"

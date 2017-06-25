@@ -28,24 +28,23 @@ class SPUtils {
     }
 
     fun getString(key: String): String {
-        if (key == null) {
-            return ""
-        }
+        if (key == null) return ""
+
         return sp?.getString(key, "").toString()
     }
 
     fun getInt(key: String): Int {
-        if (key == null) {
-            return 0
-        }
+        if (key == null) return 0
         return sp?.getInt(key, 0) as Int
     }
 
     fun putInt(key: String, value: Int) {
+        if (key == null) return
         sp?.edit()?.putInt(key, value)?.apply()
     }
 
     fun putString(key: String, value: String) {
+        if (key == null || value == null) return
         sp?.edit()?.putString(key, value)?.apply()
     }
 }

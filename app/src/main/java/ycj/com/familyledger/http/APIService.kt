@@ -15,8 +15,11 @@ import ycj.com.familyledger.bean.UserBean
  */
 interface APIService {
     @POST("loginAndRegister.action")
-    fun loginAndRegister(@Query("phone") phone: String,
+    fun loginAndRegister(@Query("loginName") userName: String, @Query("phone") phone: String,
                          @Query("pwd") password: String): Observable<BaseResponse<UserBean>>
+
+    @GET("getUserList.action") //userId不传，获取全部
+    fun getUserList(): Observable<BaseResponse<List<UserBean>>>
 
     @GET("getLedgerList.action") //userId不传，获取全部
     fun getLedgerList(@Query("userId") userId: String): Observable<BaseResponse<List<LedgerBean>>>

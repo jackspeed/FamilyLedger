@@ -2,6 +2,8 @@ package ycj.com.familyledger.ui
 
 import android.text.InputFilter
 import android.text.InputType
+import android.view.View
+import android.widget.EditText
 import org.jetbrains.anko.*
 import ycj.com.familyledger.Consts
 import ycj.com.familyledger.R
@@ -19,16 +21,20 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
 
     private var btnGo: android.widget.Button? = null
 
+    private var edxName: EditText? = null
+
     private var edxPassword: android.widget.EditText? = null
 
     override fun initialize() {
         val phone = SPUtils.getInstance().getString(Consts.SP_PHONE)
         val password = SPUtils.getInstance().getString(Consts.SP_PASSWORD)
-        if (phone != "" && password != "") {
-            edxPhone!!.setText(phone)
-            edxPassword!!.setText(password)
-        }
+        val userName = SPUtils.getInstance().getString(Consts.SP_USER_NAME)
+        edxName?.visibility = if (userName.isEmpty()) View.VISIBLE else View.GONE
+        edxName!!.setText(userName)
+        edxPhone!!.setText(phone)
+        edxPassword!!.setText(password)
     }
+
 
     override fun initView() {
         linearLayout {
@@ -50,7 +56,19 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
                     orientation = android.widget.LinearLayout.VERTICAL
                     topMargin = dip(48)
                 }
+                edxName = editText {
+                    id = R.id.edx_phone_main
+                    maxLines = 1
+                    maxEms = 11
+                    filters = arrayOf<InputFilter>(InputFilter.LengthFilter(11))
+                    backgroundResource = R.drawable.edx_input_bg
+                    hint = "留下你的名号"
 
+                }.lparams(width = matchParent, height = dip(48)) {
+                    bottomMargin = dip(40)
+                    leftMargin = dip(40)
+                    rightMargin = dip(40)
+                }
                 edxPhone = editText {
                     id = R.id.edx_phone_main
                     maxLines = 1
@@ -95,42 +113,43 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
 
     override fun initListener() {
         btnGo!!.setOnClickListener {
+            val userName = edxName!!.text.toString().trim()
             val phone = edxPhone!!.text.toString().trim()
             val password = edxPassword!!.text.toString().trim()
-            if (phone.length < 11) {
+            if (userName.isEmpty()) {
+                toast(getString(R.string.error_user_name))
+            } else if (phone.length < 11) {
                 toast(getString(R.string.error_phone_number))
             } else if (password.length < 3) {
                 toast(getString(R.string.password_not_full_six))
             } else if (!RegexUtils.create().isMobileExact(phone)) {
                 toast(getString(R.string.not_phone_number))
             } else {
-                HttpUtils.getInstance().loginAndRegister(phone, password, this@KRegisterActivity)
+                showLoading()
+                HttpUtils.getInstance().loginAndRegister(userName, phone, password, this@KRegisterActivity)
             }
         }
     }
 
     override fun onSuccess(data: BaseResponse<UserBean>) {
+        hideLoading()
         if (data.code == 200) {
-            if (data.data?.loginFlag as Boolean) {
-                toast(getString(R.string.success_login))
-            } else {
-                toast(getString(R.string.success_register))
-            }
             saveData(data.data!!)
             startActivity<KHomeActivity>()
             finish()
-        } else {
-            toast(data.message)
         }
+        toast(data.message)
     }
 
     override fun onFail(msg: String) {
+        hideLoading()
         toast(getString(R.string.fail_login_in))
     }
 
     private fun saveData(user: UserBean) {
         SPUtils.getInstance().putString(Consts.SP_PHONE, edxPhone!!.text.toString())
         SPUtils.getInstance().putString(Consts.SP_PASSWORD, edxPassword!!.text.toString())
-        SPUtils.getInstance().putString(Consts.SP_USER_ID, user.userId)
+        SPUtils.getInstance().putString(Consts.SP_USER_ID, if (user.userId == null) "" else user.userId)
+        SPUtils.getInstance().putString(Consts.SP_USER_NAME, if (user.loginName == null) "" else user.loginName)
     }
 }

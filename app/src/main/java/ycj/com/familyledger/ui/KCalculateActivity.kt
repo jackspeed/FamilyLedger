@@ -11,15 +11,41 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 import ycj.com.familyledger.Consts
 import ycj.com.familyledger.R
 import ycj.com.familyledger.adapter.KCalculateAdapter
+import ycj.com.familyledger.bean.BaseResponse
 import ycj.com.familyledger.bean.CalculateBean
 import ycj.com.familyledger.bean.LedgerBean
+import ycj.com.familyledger.bean.UserBean
+import ycj.com.familyledger.http.HttpUtils
+import ycj.com.familyledger.impl.BaseCallBack
 import ycj.com.familyledger.utils.RecyclerViewItemDiv
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.*
 
-class KCalculateActivity : KBaseActivity(), View.OnClickListener {
+class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<List<UserBean>> {
+    private var backLayout: RelativeLayout? = null
+
+    private var rv: RecyclerView? = null
+    private var userList: ArrayList<UserBean> = ArrayList()
+    override fun onSuccess(response: BaseResponse<List<UserBean>>) {
+        if (response.data != null && response.data!!.isNotEmpty()) {
+            userList.clear()
+            userList.addAll(response.data!!)
+        }
+        toast(response.message)
+        formatLocalData()
+    }
+
+    override fun onFail(msg: String) {
+        toast("获取用户列表失败")
+        formatLocalData()
+    }
 
     override fun initialize() {
+        HttpUtils.getInstance().getUserList(this)
+    }
+
+    private fun formatLocalData() {
         val dataList = intent.getParcelableArrayListExtra<Parcelable>(Consts.LIST_DATA)
         var totalCash: Double = 0.0
         val map = HashMap<String, Double>()//个人userId对应个人所有花费金额
@@ -46,16 +72,20 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener {
         //2--小数点后面保留两位  RoundingMode.UP--四舍五入
         val averageMoney = BigDecimal(totalCash).divide(BigDecimal(userIdSet.size), 2, RoundingMode.UP).toString()
         for (s in map.keys) {
-            //人均金额-个人花费金额
-            val value = BigDecimal(averageMoney).subtract(BigDecimal(map[s]?.toString()))
-            data.add(CalculateBean("", averageMoney, totalCash.toString(), s, map[s].toString(), value.toString()))
+            //个人花费金额-人均金额
+            val value = BigDecimal(map[s]?.toString()).subtract(BigDecimal(averageMoney))
+            data.add(CalculateBean(getUserNameByUserId(s), averageMoney, totalCash.toString(), s, map[s].toString(), value.toString()))
         }
         rv?.adapter = KCalculateAdapter(data, this)
     }
 
-    private var backLayout: RelativeLayout? = null
-
-    private var rv: RecyclerView? = null
+    private fun getUserNameByUserId(userId: String): String {
+        var userName = ""
+        if (userId == null) return userName
+        userList.filter { userId == it.userId }
+                .forEach { userName = it.loginName }
+        return userName
+    }
 
     override fun initView() {
         relativeLayout {
