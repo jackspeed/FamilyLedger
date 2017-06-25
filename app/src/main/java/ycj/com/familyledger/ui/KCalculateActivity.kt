@@ -27,26 +27,34 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
 
     private var rv: RecyclerView? = null
     private var userList: ArrayList<UserBean> = ArrayList()
+
+    override fun initialize() {
+        showLoading()
+        HttpUtils.getInstance().getUserList(this)
+    }
+
     override fun onSuccess(response: BaseResponse<List<UserBean>>) {
+        hideLoading()
         if (response.data != null && response.data!!.isNotEmpty()) {
             userList.clear()
             userList.addAll(response.data!!)
         }
-        toast(response.message)
         formatLocalData()
     }
 
     override fun onFail(msg: String) {
+        hideLoading()
         toast("获取用户列表失败")
         formatLocalData()
     }
 
-    override fun initialize() {
-        HttpUtils.getInstance().getUserList(this)
-    }
-
     private fun formatLocalData() {
         val dataList = intent.getParcelableArrayListExtra<Parcelable>(Consts.LIST_DATA)
+        toast("暂无数据")
+        if (dataList == null || dataList.size == 0) {
+            finish()
+            return
+        }
         var totalCash: Double = 0.0
         val map = HashMap<String, Double>()//个人userId对应个人所有花费金额
         val userIdSet = HashSet<String>()
