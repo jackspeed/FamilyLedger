@@ -2,6 +2,7 @@ package ycj.com.familyledger.ui
 
 import android.app.Dialog
 import android.graphics.drawable.BitmapDrawable
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.widget.TextView
 import org.jetbrains.anko.find
@@ -12,7 +13,7 @@ import ycj.com.familyledger.R
  * @date: 2017-06-12 18:43
  * @version V1.0 <>
  */
-abstract class KBaseActivity : android.support.v7.app.AppCompatActivity() {
+abstract class KBaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)

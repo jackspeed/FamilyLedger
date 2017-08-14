@@ -50,8 +50,8 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
 
     private fun formatLocalData() {
         val dataList = intent.getParcelableArrayListExtra<Parcelable>(Consts.LIST_DATA)
-        toast("暂无数据")
         if (dataList == null || dataList.size == 0) {
+            toast("暂无数据")
             finish()
             return
         }
