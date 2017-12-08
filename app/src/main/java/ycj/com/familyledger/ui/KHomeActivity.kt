@@ -44,7 +44,7 @@ class KHomeActivity : KBaseActivity(),
 
     override fun initialize() {
         showLoading()
-        HttpUtils.getInstance().getLedgerList("", this)
+        HttpUtils.getInstance().getLedgerList(0, this)
     }
 
     override fun initListener() {
@@ -77,7 +77,7 @@ class KHomeActivity : KBaseActivity(),
 
     //输入框返回
     override fun callBack(dates: String, cashs: String) {
-        val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
+        val userId = SPUtils.getInstance().getLong(Consts.SP_USER_ID)
         HttpUtils.getInstance().addLedger(userId, dates, cashs, this)
     }
 
@@ -88,7 +88,7 @@ class KHomeActivity : KBaseActivity(),
     override fun onItemLongClickListener(position: Int) {
         showTips(getString(R.string.sure_delete), object : OnTipsCallBack {
             override fun positiveClick() {
-                HttpUtils.getInstance().deleteLedger(data[position].id, object : IDeleteCallBack {
+                HttpUtils.getInstance().deleteLedger(data[position].id!!, object : IDeleteCallBack {
                     override fun onDeleteFail(failMsg: String) {
                         toast(getString(R.string.fail_delete))
                     }
@@ -110,8 +110,8 @@ class KHomeActivity : KBaseActivity(),
             }
             R.id.layout_split -> {
                 showLoading()
-                val userId = SPUtils.getInstance().getString(Consts.SP_USER_ID)
-                HttpUtils.getInstance().getLedgerList(if (selfData) userId else "", this)
+                val userId = SPUtils.getInstance().getLong(Consts.SP_USER_ID)
+                HttpUtils.getInstance().getLedgerList(if (selfData) userId else 0, this)
                 selfData = !selfData
             }
             R.id.btn_home_add -> EdxDialog.Companion.create()

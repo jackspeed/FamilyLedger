@@ -22,7 +22,7 @@ import ycj.com.familyledger.utils.RegexUtils
 class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<LedgerBean>, TextWatcher {
     private var isChanged: Boolean = false
     private var saveFlag: Boolean = false
-    private var id: Int = 0
+    private var id: Long = 0
     private var backLayout: RelativeLayout? = null
     private var dataBean: LedgerBean? = null
     private var btnEdit: TextView? = null
@@ -32,10 +32,10 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
 
     override fun initialize() {
         dataBean = intent.getParcelableExtra<LedgerBean>(Consts.DATA_BEAN) as LedgerBean
-        id = dataBean!!.id
-        edxCash?.setText(dataBean?.cash)
-        edxDate?.setText(dataBean?.time)
-        edxPhone?.setText(dataBean?.userId)
+        id = dataBean!!.id!!
+        edxCash?.setText(dataBean?.consumeMoney)
+        edxDate?.setText(dataBean?.consumeDate)
+        edxPhone?.setText(dataBean?.userId.toString())
         setEdxAble(false)
     }
 
@@ -164,8 +164,8 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
         if (RegexUtils.create().isDate(edxDate!!.editableText.toString().trim())) {
             showLoading()
             HttpUtils.getInstance().updateLedger(
-                    dataBean!!.id,
-                    edxPhone?.editableText.toString().trim(),
+                    dataBean!!.id!!,
+                    edxPhone?.editableText.toString().toLong(),
                     edxDate!!.editableText.toString().trim(),
                     edxCash!!.editableText.toString().trim(),
                     this)

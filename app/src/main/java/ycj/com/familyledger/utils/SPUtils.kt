@@ -33,6 +33,12 @@ class SPUtils {
         return sp?.getString(key, "").toString()
     }
 
+    fun getLong(key: String): Long {
+        if (key == null) return 0
+        return sp?.getLong(key, 0) as Long
+    }
+
+
     fun getInt(key: String): Int {
         if (key == null) return 0
         return sp?.getInt(key, 0) as Int
@@ -42,6 +48,13 @@ class SPUtils {
         if (key == null) return
         sp?.edit()?.putInt(key, value)?.apply()
     }
+
+
+    fun putLong(key: String, value: Long) {
+        if (key == null) return
+        sp?.edit()?.putLong(key, value)?.apply()
+    }
+
 
     fun putString(key: String, value: String) {
         if (key == null || value == null) return

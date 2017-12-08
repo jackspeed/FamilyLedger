@@ -28,4 +28,7 @@
 
     <dimen name="normal_text_size">16sp</dimen>
     <dimen name="title_text_size">11sp</dimen>
+
+    <!--Kotlin-->
+    <dimen name="title_size">6sp</dimen>
 </resources>

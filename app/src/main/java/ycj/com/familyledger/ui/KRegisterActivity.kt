@@ -2,6 +2,7 @@ package ycj.com.familyledger.ui
 
 import android.text.InputFilter
 import android.text.InputType
+import android.view.Gravity
 import android.view.View
 import android.widget.EditText
 import org.jetbrains.anko.*
@@ -42,9 +43,9 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
                 orientation = android.widget.LinearLayout.VERTICAL
             }
             linearLayout {
-                textView("伐木雷") {
-                    textSize = resources.getDimension(R.dimen.title_text_size)
-                    gravity = android.view.Gravity.CENTER
+                textView("Ledger") {
+                    textSize = resources.getDimension(R.dimen.title_size)
+                    gravity = Gravity.CENTER
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.color.color_title_bar
 
@@ -54,17 +55,17 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
                 lparams(height = matchParent, width = matchParent) {
                     gravity = android.view.Gravity.CENTER
                     orientation = android.widget.LinearLayout.VERTICAL
-                    topMargin = dip(48)
+                    topMargin = dip(40)
                 }
                 edxName = editText {
                     id = R.id.edx_phone_main
                     maxLines = 1
-                    maxEms = 11
+                    maxEms = 20
                     filters = arrayOf<InputFilter>(InputFilter.LengthFilter(11))
                     backgroundResource = R.drawable.edx_input_bg
                     hint = "留下你的名号"
 
-                }.lparams(width = matchParent, height = dip(48)) {
+                }.lparams(width = matchParent, height = dip(40)) {
                     bottomMargin = dip(40)
                     leftMargin = dip(40)
                     rightMargin = dip(40)
@@ -78,7 +79,7 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
                     backgroundResource = R.drawable.edx_input_bg
                     hint = "请输入手机号"
 
-                }.lparams(width = matchParent, height = dip(48)) {
+                }.lparams(width = matchParent, height = dip(40)) {
                     bottomMargin = dip(40)
                     leftMargin = dip(40)
                     rightMargin = dip(40)
@@ -91,7 +92,7 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
                     filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
                     backgroundResource = R.drawable.edx_input_bg
                     hint = "请输密码"
-                }.lparams(width = matchParent, height = dip(48)) {
+                }.lparams(width = matchParent, height = dip(40)) {
                     bottomMargin = dip(40)
                     leftMargin = dip(40)
                     rightMargin = dip(40)
@@ -100,10 +101,10 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
                 btnGo = button {
                     id = R.id.btn_go_main
                     text = "进入应用"
-                    textSize = sp(10).toFloat()
+                    textSize = sp(6).toFloat()
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.drawable.bg_btn
-                }.lparams(width = matchParent, height = dip(48)) {
+                }.lparams(width = matchParent, height = dip(40)) {
                     leftMargin = dip(40)
                     rightMargin = dip(40)
                 }
@@ -149,7 +150,7 @@ class KRegisterActivity : KBaseActivity(), BaseCallBack<UserBean> {
     private fun saveData(user: UserBean) {
         SPUtils.getInstance().putString(Consts.SP_PHONE, edxPhone!!.text.toString())
         SPUtils.getInstance().putString(Consts.SP_PASSWORD, edxPassword!!.text.toString())
-        SPUtils.getInstance().putString(Consts.SP_USER_ID, if (user.userId == null) "" else user.userId)
-        SPUtils.getInstance().putString(Consts.SP_USER_NAME, if (user.loginName == null) "" else user.loginName)
+        SPUtils.getInstance().putLong(Consts.SP_USER_ID, user.userId!!)
+        SPUtils.getInstance().putString(Consts.SP_USER_NAME, user.userName!!)
     }
 }

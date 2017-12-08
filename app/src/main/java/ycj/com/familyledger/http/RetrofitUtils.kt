@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
  */
 class RetrofitUtils private constructor() : Interceptor {
     //长缓存有效期为7天
-    val CACHE_STALE_LONG = 0//"60 * 60 * 24 * 7"
+    private val CACHE_STALE_LONG = 0//"60 * 60 * 24 * 7"
 
     var mOkHttpClient: OkHttpClient? = null
 
@@ -89,15 +89,15 @@ class RetrofitUtils private constructor() : Interceptor {
     fun getUserList(): Observable<BaseResponse<List<UserBean>>>
             = service!!.getUserList()
 
-    fun getLedgerList(userId: String): Observable<BaseResponse<List<LedgerBean>>>
+    fun getLedgerList(userId: Long): Observable<BaseResponse<List<LedgerBean>>>
             = service!!.getLedgerList(userId)
 
-    fun deleteLedger(id: Int): Observable<BaseResponse<LedgerBean>>
+    fun deleteLedger(id: Long): Observable<BaseResponse<LedgerBean>>
             = service!!.deleteLedger(id)
 
-    fun addLedger(userId: String, time: String, cash: String): Observable<BaseResponse<LedgerBean>>
+    fun addLedger(userId: Long, time: String, cash: String): Observable<BaseResponse<LedgerBean>>
             = service!!.addLedger(userId, time, cash)
 
-    fun updateLedger(id: Int, userId: String, time: String, cash: String): Observable<BaseResponse<LedgerBean>>
+    fun updateLedger(id: Long, userId: Long, time: String, cash: String): Observable<BaseResponse<LedgerBean>>
             = service!!.updateLedger(id, userId, time, cash)
 }

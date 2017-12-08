@@ -15,27 +15,28 @@ import ycj.com.familyledger.bean.UserBean
  */
 interface APIService {
     @POST("loginAndRegister.action")
-    fun loginAndRegister(@Query("loginName") userName: String, @Query("phone") phone: String,
+    fun loginAndRegister(@Query("loginName") userName: String,
+                         @Query("phone") phone: String,
                          @Query("pwd") password: String): Observable<BaseResponse<UserBean>>
 
     @GET("getUserList.action") //userId不传，获取全部
     fun getUserList(): Observable<BaseResponse<List<UserBean>>>
 
     @GET("getLedgerList.action") //userId不传，获取全部
-    fun getLedgerList(@Query("userId") userId: String): Observable<BaseResponse<List<LedgerBean>>>
+    fun getLedgerList(@Query("userId") userId: Long): Observable<BaseResponse<List<LedgerBean>>>
 
     @POST("deleteLedger.action")
-    fun deleteLedger(@Query("id") id: Int): Observable<BaseResponse<LedgerBean>>
+    fun deleteLedger(@Query("id") id: Long): Observable<BaseResponse<LedgerBean>>
 
     @POST("addLedger.action")
-    fun addLedger(@Query("userId") userId: String,
+    fun addLedger(@Query("userId") userId: Long,
                   @Query("time") time: String,
                   @Query("cash") cash: String): Observable<BaseResponse<LedgerBean>>
 
     @POST("updateLedger.action")
     fun updateLedger(
-            @Query("id") id: Int,
-            @Query("userId") userId: String,
+            @Query("id") id: Long,
+            @Query("userId") userId: Long,
             @Query("time") time: String,
             @Query("cash") cash: String): Observable<BaseResponse<LedgerBean>>
 }

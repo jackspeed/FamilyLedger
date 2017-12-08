@@ -55,23 +55,24 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
             finish()
             return
         }
-        var totalCash: Double = 0.0
-        val map = HashMap<String, Double>()//个人userId对应个人所有花费金额
-        val userIdSet = HashSet<String>()
+        var totalCash = 0.0
+        val map = HashMap<Long, Double>()//个人userId对应个人所有花费金额
+        val userIdSet = HashSet<Long>()
         for (bean in dataList) {
             bean as LedgerBean
-            totalCash = BigDecimal(bean.cash).add(BigDecimal(totalCash.toString())).toDouble()
-            userIdSet.add(bean.userId)
+            totalCash = BigDecimal(bean.consumeMoney).add(BigDecimal(totalCash.toString())).toDouble()
+            userIdSet.add(bean.userId!!)
+            userIdSet.add(bean.userId!!)
         }
         for (userId in userIdSet) {
             for (bean in dataList) {
                 bean as LedgerBean
                 if (userId == bean.userId) {
                     if (map.containsKey(userId)) {
-                        val cash = map[userId]?.plus(bean.cash.toDouble())
+                        val cash = map[userId]?.plus(bean.consumeMoney.toDouble())
                         map.put(userId, cash!!)
                     } else {
-                        map.put(userId, bean.cash.toDouble())
+                        map.put(userId, bean.consumeMoney.toDouble())
                     }
                 }
             }
@@ -82,16 +83,17 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
         for (s in map.keys) {
             //个人花费金额-人均金额
             val value = BigDecimal(map[s]?.toString()).subtract(BigDecimal(averageMoney))
-            data.add(CalculateBean(getUserNameByUserId(s), averageMoney, totalCash.toString(), s, map[s].toString(), value.toString()))
+            data.add(CalculateBean(getUserNameByUserId(s), averageMoney, totalCash.toString(),
+                    s.toString(), map[s].toString(), value.toString()))
         }
         rv?.adapter = KCalculateAdapter(data, this)
     }
 
-    private fun getUserNameByUserId(userId: String): String {
+    private fun getUserNameByUserId(userId: Long): String {
         var userName = ""
         if (userId == null) return userName
         userList.filter { userId == it.userId }
-                .forEach { userName = it.loginName }
+                .forEach { userName = it.userName!! }
         return userName
     }
 

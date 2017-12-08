@@ -43,10 +43,10 @@ class KLogoActivity : KBaseActivity(), BaseCallBack<UserBean> {
     override fun onSuccess(data: BaseResponse<UserBean>) {
         hideLoading()
         if (data.code == 200) {
-            SPUtils.getInstance().putString(Consts.SP_PHONE, data.data!!.userId)
-            SPUtils.getInstance().putString(Consts.SP_PASSWORD, data.data!!.pwd)
-            SPUtils.getInstance().putString(Consts.SP_USER_ID, data.data!!.userId)
-            SPUtils.getInstance().putString(Consts.SP_USER_NAME, data.data!!.loginName)
+            SPUtils.getInstance().putLong(Consts.SP_PHONE, data.data!!.userId!!)
+            SPUtils.getInstance().putString(Consts.SP_PASSWORD, data.data!!.password!!)
+            SPUtils.getInstance().putString(Consts.SP_USER_ID, data.data!!.userId.toString())
+            SPUtils.getInstance().putString(Consts.SP_USER_NAME, data.data!!.userName!!)
             startActivity<KHomeActivity>()
             finish()
         } else {

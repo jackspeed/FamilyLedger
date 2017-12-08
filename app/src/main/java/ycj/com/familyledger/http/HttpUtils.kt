@@ -43,7 +43,7 @@ class HttpUtils {
                 }
     }
 
-    fun getLedgerList(userId: String, callback: IGetLedgerList) {
+    fun getLedgerList(userId: Long, callback: IGetLedgerList) {
         RetrofitUtils.getInstance()
                 .getLedgerList(userId)
                 .subscribeOn(Schedulers.io())
@@ -77,7 +77,7 @@ class HttpUtils {
                 }
     }
 
-    fun deleteLedger(id: Int, callback: IDeleteCallBack) {
+    fun deleteLedger(id: Long, callback: IDeleteCallBack) {
         RetrofitUtils.getInstance()
                 .deleteLedger(id)
                 .subscribeOn(Schedulers.io())
@@ -94,7 +94,7 @@ class HttpUtils {
                 }
     }
 
-    fun addLedger(userId: String, time: String, cash: String, callback: IAddLedger) {
+    fun addLedger(userId: Long, time: String, cash: String, callback: IAddLedger) {
         RetrofitUtils.getInstance()
                 .addLedger(userId, time, cash)
                 .subscribeOn(Schedulers.io())
@@ -111,7 +111,7 @@ class HttpUtils {
                 }
     }
 
-    fun updateLedger(id: Int, userId: String, time: String, cash: String, callback: BaseCallBack<LedgerBean>) {
+    fun updateLedger(id: Long, userId: Long, time: String, cash: String, callback: BaseCallBack<LedgerBean>) {
         RetrofitUtils.getInstance()
                 .updateLedger(id, userId, time, cash)
                 .subscribeOn(Schedulers.io())

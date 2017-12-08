@@ -12,7 +12,6 @@ import ycj.com.familyledger.utils.SPUtils
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        //TODO:初始化程序
         //缓存Context
         SPUtils.getInstance().init(this)
         RetrofitUtils.getInstance().init(this)
