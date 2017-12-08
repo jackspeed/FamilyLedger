@@ -35,11 +35,15 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
 
     override fun onSuccess(response: BaseResponse<List<UserBean>>) {
         hideLoading()
-        if (response.data != null && response.data!!.isNotEmpty()) {
-            userList.clear()
-            userList.addAll(response.data!!)
+        if (response.result == 1) {
+            if (response.data.isNotEmpty()) {
+                userList.clear()
+                userList.addAll(response.data)
+            }
+            formatLocalData()
+        } else {
+            toast(response.error.message)
         }
-        formatLocalData()
     }
 
     override fun onFail(msg: String) {
@@ -60,19 +64,19 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
         val userIdSet = HashSet<Long>()
         for (bean in dataList) {
             bean as LedgerBean
-            totalCash = BigDecimal(bean.consumeMoney).add(BigDecimal(totalCash.toString())).toDouble()
-            userIdSet.add(bean.userId!!)
-            userIdSet.add(bean.userId!!)
+            totalCash = BigDecimal(bean.consume_money).add(BigDecimal(totalCash.toString())).toDouble()
+            userIdSet.add(bean.user_id!!)
+            userIdSet.add(bean.user_id!!)
         }
         for (userId in userIdSet) {
             for (bean in dataList) {
                 bean as LedgerBean
-                if (userId == bean.userId) {
+                if (userId == bean.user_id) {
                     if (map.containsKey(userId)) {
-                        val cash = map[userId]?.plus(bean.consumeMoney.toDouble())
+                        val cash = map[userId]?.plus(bean.consume_money!!.toDouble())
                         map.put(userId, cash!!)
                     } else {
-                        map.put(userId, bean.consumeMoney.toDouble())
+                        map.put(userId, bean.consume_money!!.toDouble())
                     }
                 }
             }
@@ -93,7 +97,7 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
         var userName = ""
         if (userId == null) return userName
         userList.filter { userId == it.userId }
-                .forEach { userName = it.userName!! }
+                .forEach { userName = it.user_name!! }
         return userName
     }
 

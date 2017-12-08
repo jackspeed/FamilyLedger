@@ -17,14 +17,13 @@ class KLogoActivity : KBaseActivity(), BaseCallBack<UserBean> {
     override fun initialize() {
         showLoading()
         android.os.Handler().postDelayed({
-            val userName = SPUtils.getInstance().getString(Consts.SP_USER_NAME)
             val phone = SPUtils.getInstance().getString(Consts.SP_PHONE)
             val password = SPUtils.getInstance().getString(Consts.SP_PASSWORD)
-            if (userName == "" || phone == "" || password == "" || !RegexUtils.create().isMobileExact(phone)) {
+            if (password == "" || !RegexUtils.create().isMobileExact(phone)) {
                 loginFail()
                 hideLoading()
             } else {
-                HttpUtils.getInstance().loginAndRegister(userName, phone, password, this)
+                HttpUtils.getInstance().login(phone, password, this)
             }
         }, 1000)
     }
@@ -42,11 +41,11 @@ class KLogoActivity : KBaseActivity(), BaseCallBack<UserBean> {
 
     override fun onSuccess(data: BaseResponse<UserBean>) {
         hideLoading()
-        if (data.code == 200) {
-            SPUtils.getInstance().putLong(Consts.SP_PHONE, data.data!!.userId!!)
-            SPUtils.getInstance().putString(Consts.SP_PASSWORD, data.data!!.password!!)
-            SPUtils.getInstance().putString(Consts.SP_USER_ID, data.data!!.userId.toString())
-            SPUtils.getInstance().putString(Consts.SP_USER_NAME, data.data!!.userName!!)
+        if (data.result == 1) {
+            SPUtils.getInstance().putString(Consts.SP_PHONE, data.data.mobile!!)
+            SPUtils.getInstance().putString(Consts.SP_PASSWORD, data.data.password!!)
+            SPUtils.getInstance().putLong(Consts.SP_USER_ID, data.data.userId!!)
+            SPUtils.getInstance().putString(Consts.SP_USER_NAME, data.data.user_name!!)
             startActivity<KHomeActivity>()
             finish()
         } else {
@@ -60,7 +59,7 @@ class KLogoActivity : KBaseActivity(), BaseCallBack<UserBean> {
     }
 
     private fun loginFail() {
-        startActivity<KRegisterActivity>()
+        startActivity<KLoginActivity>()
         finish()
     }
 }

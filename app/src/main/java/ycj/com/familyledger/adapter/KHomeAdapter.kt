@@ -29,9 +29,9 @@ class KHomeAdapter : RecyclerView.Adapter<KHomeAdapter.MyViewHolder> {
 
 
     override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
-        holder!!.tvTitle.text = mContext.getString(R.string.date) + "  " + dataList[position].consumeDate
-        holder.tvContent.text = mContext.getString(R.string.cash) + "  " + dataList[position].consumeMoney
-        holder.tvPhone.text = dataList[position].userId.toString()
+        holder!!.tvTitle.text = mContext.getString(R.string.date) + "  " + dataList[position].consume_date
+        holder.tvContent.text = mContext.getString(R.string.cash) + "  " + dataList[position].consume_money
+        holder.tvPhone.text = dataList[position].user_id.toString()
 
         holder.ly.setOnClickListener {
             if (listener != null) {

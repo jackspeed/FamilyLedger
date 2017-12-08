@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">账簿</string>
+    <string name="app_name">Ledger</string>
     <string name="error_phone_number">手机号不正确</string>
     <string name="password_not_full_six">密码不能少于3位</string>
     <string name="success_register">注册成功</string>

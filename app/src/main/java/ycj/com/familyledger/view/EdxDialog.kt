@@ -50,9 +50,9 @@ class EdxDialog {
             }
             textView(msg) {
                 gravity = Gravity.CENTER
-                textSize = sp(10).toFloat()
+                textSize = sp(5).toFloat()
                 textColor = context.resources.getColor(R.color.black_text)
-            }.lparams(width = matchParent, height = dip(48))
+            }.lparams(width = matchParent, height = dip(40))
 
             linearLayout {
                 orientation = LinearLayout.VERTICAL
@@ -60,7 +60,7 @@ class EdxDialog {
                 edxDate = editText {
                     id = R.id.edx_date_add
                     maxLines = 1
-                    textSize = sp(8).toFloat()
+                    textSize = sp(5).toFloat()
                     inputType = InputType.TYPE_DATETIME_VARIATION_DATE or InputType.TYPE_CLASS_DATETIME
                     filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
                     background = context.resources.getDrawable(R.drawable.edx_input_bg)
@@ -74,7 +74,7 @@ class EdxDialog {
                 edxCash = editText {
                     id = R.id.edx_cash_add
                     maxLines = 1
-                    textSize = sp(8).toFloat()
+                    textSize = sp(5).toFloat()
                     inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_CLASS_NUMBER
                     filters = arrayOf<InputFilter>(InputFilter.LengthFilter(8))
                     background = context.resources.getDrawable(R.drawable.edx_input_bg)
@@ -93,7 +93,7 @@ class EdxDialog {
 
             tvOk = textView("确定") {
                 gravity = Gravity.CENTER
-                textSize = sp(9).toFloat()
+                textSize = sp(6).toFloat()
                 textColor = context.resources.getColor(R.color.btn_text_color_selector)
                 background = context.resources.getDrawable(R.drawable.bg_btn_bottom_dialog)
             }.lparams(width = matchParent, height = dip(40)) {

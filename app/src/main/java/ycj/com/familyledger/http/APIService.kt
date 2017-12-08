@@ -6,6 +6,7 @@ import retrofit2.http.Query
 import rx.Observable
 import ycj.com.familyledger.bean.BaseResponse
 import ycj.com.familyledger.bean.LedgerBean
+import ycj.com.familyledger.bean.PageResult
 import ycj.com.familyledger.bean.UserBean
 
 /**
@@ -14,29 +15,33 @@ import ycj.com.familyledger.bean.UserBean
  * @version V1.0 <>
  */
 interface APIService {
-    @POST("loginAndRegister.action")
-    fun loginAndRegister(@Query("loginName") userName: String,
-                         @Query("phone") phone: String,
-                         @Query("pwd") password: String): Observable<BaseResponse<UserBean>>
+    @POST("user/login")
+    fun login(@Query("mobile") mobile: String,
+              @Query("password") password: String): Observable<BaseResponse<UserBean>>
 
-    @GET("getUserList.action") //userId不传，获取全部
-    fun getUserList(): Observable<BaseResponse<List<UserBean>>>
+    @POST("user/register")
+    fun register(userBean: UserBean): Observable<BaseResponse<UserBean>>
 
-    @GET("getLedgerList.action") //userId不传，获取全部
-    fun getLedgerList(@Query("userId") userId: Long): Observable<BaseResponse<List<LedgerBean>>>
+    @GET("user/findUserList") //userId不传，获取全部
+    fun getUserList(@Query("userId") userId: Long?): Observable<BaseResponse<List<UserBean>>>
 
-    @POST("deleteLedger.action")
-    fun deleteLedger(@Query("id") id: Long): Observable<BaseResponse<LedgerBean>>
+    @GET("consume/record/findByCondition") //userId不传，获取全部
+    fun getLedgerList(@Query("userId") userId: Long,
+                      @Query("pageNo") pageNo: Int,
+                      @Query("pageSize") pageSize: Int): Observable<PageResult<LedgerBean>>
 
-    @POST("addLedger.action")
+    @POST("consume/record/deleteById")
+    fun deleteById(@Query("id") id: Long): Observable<BaseResponse<String>>
+
+    @POST("consume/record/add")
     fun addLedger(@Query("userId") userId: Long,
-                  @Query("time") time: String,
-                  @Query("cash") cash: String): Observable<BaseResponse<LedgerBean>>
+                  @Query("consumeDate") consume_date: String,
+                  @Query("consumeMoney") consume_money: String): Observable<BaseResponse<String>>
 
-    @POST("updateLedger.action")
+    @POST("consume/record/update")
     fun updateLedger(
             @Query("id") id: Long,
             @Query("userId") userId: Long,
-            @Query("time") time: String,
-            @Query("cash") cash: String): Observable<BaseResponse<LedgerBean>>
+            @Query("consumeDate") consumeDate: String,
+            @Query("consumeMoney") consumeMoney: String): Observable<BaseResponse<String>>
 }

@@ -9,6 +9,7 @@ import rx.Observable
 import ycj.com.familyledger.Consts
 import ycj.com.familyledger.bean.BaseResponse
 import ycj.com.familyledger.bean.LedgerBean
+import ycj.com.familyledger.bean.PageResult
 import ycj.com.familyledger.bean.UserBean
 import ycj.com.familyledger.utils.NetWorkUtils
 import java.io.File
@@ -83,21 +84,24 @@ class RetrofitUtils private constructor() : Interceptor {
         }
     }
 
-    fun loginAndRegister(userName: String, phone: String, password: String): Observable<BaseResponse<UserBean>>
-            = service!!.loginAndRegister(userName, phone, password)
+    fun login(phone: String, password: String): Observable<BaseResponse<UserBean>>
+            = service!!.login(phone, password)
 
-    fun getUserList(): Observable<BaseResponse<List<UserBean>>>
-            = service!!.getUserList()
+    fun register(userBean: UserBean): Observable<BaseResponse<UserBean>>
+            = service!!.register(userBean)
 
-    fun getLedgerList(userId: Long): Observable<BaseResponse<List<LedgerBean>>>
-            = service!!.getLedgerList(userId)
+    fun getUserList(userId: Long?): Observable<BaseResponse<List<UserBean>>>
+            = service!!.getUserList(userId)
 
-    fun deleteLedger(id: Long): Observable<BaseResponse<LedgerBean>>
-            = service!!.deleteLedger(id)
+    fun getLedgerList(userId: Long, pageNo: Int, pageSize: Int): Observable<PageResult<LedgerBean>>
+            = service!!.getLedgerList(userId, pageNo, pageSize)
 
-    fun addLedger(userId: Long, time: String, cash: String): Observable<BaseResponse<LedgerBean>>
+    fun deleteLedger(id: Long): Observable<BaseResponse<String>>
+            = service!!.deleteById(id)
+
+    fun addLedger(userId: Long, time: String, cash: String): Observable<BaseResponse<String>>
             = service!!.addLedger(userId, time, cash)
 
-    fun updateLedger(id: Long, userId: Long, time: String, cash: String): Observable<BaseResponse<LedgerBean>>
+    fun updateLedger(id: Long, userId: Long, time: String, cash: String): Observable<BaseResponse<String>>
             = service!!.updateLedger(id, userId, time, cash)
 }

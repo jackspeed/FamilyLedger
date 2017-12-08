@@ -17,9 +17,9 @@ import ycj.com.familyledger.R
 import ycj.com.familyledger.adapter.KHomeAdapter
 import ycj.com.familyledger.bean.BaseResponse
 import ycj.com.familyledger.bean.LedgerBean
+import ycj.com.familyledger.bean.PageResult
 import ycj.com.familyledger.http.HttpUtils
-import ycj.com.familyledger.impl.IAddLedger
-import ycj.com.familyledger.impl.IDeleteCallBack
+import ycj.com.familyledger.impl.BaseCallBack
 import ycj.com.familyledger.impl.IGetLedgerList
 import ycj.com.familyledger.utils.RecyclerViewItemDiv
 import ycj.com.familyledger.utils.SPUtils
@@ -30,7 +30,7 @@ import java.util.*
 class KHomeActivity : KBaseActivity(),
         KHomeAdapter.ItemClickListener,
         EdxDialog.DataCallBack,
-        View.OnClickListener, IGetLedgerList, IAddLedger {
+        View.OnClickListener, IGetLedgerList {
 
     private var trigleCancel: Long = 0
     private var selfData: Boolean = true
@@ -44,7 +44,7 @@ class KHomeActivity : KBaseActivity(),
 
     override fun initialize() {
         showLoading()
-        HttpUtils.getInstance().getLedgerList(0, this)
+        HttpUtils.getInstance().getLedgerList(0, 1, 1000, this);
     }
 
     override fun initListener() {
@@ -78,26 +78,47 @@ class KHomeActivity : KBaseActivity(),
     //输入框返回
     override fun callBack(dates: String, cashs: String) {
         val userId = SPUtils.getInstance().getLong(Consts.SP_USER_ID)
-        HttpUtils.getInstance().addLedger(userId, dates, cashs, this)
+        HttpUtils.getInstance().addLedger(userId, dates, cashs, object : BaseCallBack<String> {
+            override fun onSuccess(data: BaseResponse<String>) {
+                hideLoading()
+                if (data.result == 1) {
+                    toast(data.data)
+                    initialize()
+                } else {
+                    toast(data.error.message)
+                }
+            }
+
+            override fun onFail(msg: String) {
+                toast(msg)
+            }
+        })
     }
 
     override fun onItemClickListener(position: Int) {
         go2Detail(position)
     }
 
+
     override fun onItemLongClickListener(position: Int) {
         showTips(getString(R.string.sure_delete), object : OnTipsCallBack {
             override fun positiveClick() {
-                HttpUtils.getInstance().deleteLedger(data[position].id!!, object : IDeleteCallBack {
-                    override fun onDeleteFail(failMsg: String) {
+                HttpUtils.getInstance().deleteLedger(data[position].id!!, object : BaseCallBack<String> {
+                    override fun onSuccess(data: BaseResponse<String>) {
+                        if (data.result == 1) {
+
+                            toast(getString(R.string.success_delete))
+                            this@KHomeActivity.data.removeAt(position)
+                            mAdapter?.notifyDataSetChanged()
+                        } else {
+                            toast(data.error.message)
+                        }
+                    }
+
+                    override fun onFail(msg: String) {
                         toast(getString(R.string.fail_delete))
                     }
 
-                    override fun onDeleteSuccess(data: BaseResponse<LedgerBean>) {
-                        toast(getString(R.string.success_delete))
-                        this@KHomeActivity.data.removeAt(position)
-                        mAdapter?.notifyDataSetChanged()
-                    }
                 })
             }
         })
@@ -111,28 +132,26 @@ class KHomeActivity : KBaseActivity(),
             R.id.layout_split -> {
                 showLoading()
                 val userId = SPUtils.getInstance().getLong(Consts.SP_USER_ID)
-                HttpUtils.getInstance().getLedgerList(if (selfData) userId else 0, this)
+                HttpUtils.getInstance().getLedgerList(if (selfData) userId else 0,
+                        1, 1000, this)
                 selfData = !selfData
             }
             R.id.btn_home_add -> EdxDialog.Companion.create()
-                    .showEdxDialog("请输入信息", this@KHomeActivity, this@KHomeActivity)
+                    .showEdxDialog("请输入信息", this@KHomeActivity,
+                            this@KHomeActivity)
         }
     }
 
-    override fun onAddSuccess(data: BaseResponse<LedgerBean>) {
-        toast("添加成功")
-        hideLoading()
-        this.initialize()
-    }
 
-    override fun onSuccess(data: BaseResponse<List<LedgerBean>>) {
+    override fun onSuccess(pages: PageResult<LedgerBean>) {
         hideLoading()
-        if (data.data == null || data.data!!.isEmpty()) {
+        if (pages.list == null) {
             mAdapter?.clearData()
             toast("暂无数据")
         } else {
-            mAdapter?.setDatas(data.data!!)
+            mAdapter?.setDatas(pages.list)
         }
+
     }
 
     override fun onFail(msg: String) {
@@ -141,10 +160,6 @@ class KHomeActivity : KBaseActivity(),
         toast("获取失败")
     }
 
-    override fun onAddFail(msg: String) {
-        hideLoading()
-        toast("添加失败")
-    }
 
     private fun go2Detail(position: Int) {
         val intent = android.content.Intent(KHomeActivity@ this, KLedgerDetailActivity::class.java)

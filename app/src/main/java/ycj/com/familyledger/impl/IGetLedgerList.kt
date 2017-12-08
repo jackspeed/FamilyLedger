@@ -1,7 +1,7 @@
 package ycj.com.familyledger.impl
 
-import ycj.com.familyledger.bean.BaseResponse
 import ycj.com.familyledger.bean.LedgerBean
+import ycj.com.familyledger.bean.PageResult
 
 /**
  * @author: ycj
@@ -9,6 +9,6 @@ import ycj.com.familyledger.bean.LedgerBean
  * @version V1.0 <>
  */
 interface IGetLedgerList {
-    fun onSuccess(data: BaseResponse<List<LedgerBean>>)
+    fun onSuccess(data: PageResult<LedgerBean>)
     fun onFail(msg: String)
 }

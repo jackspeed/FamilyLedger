@@ -1,8 +1,5 @@
 package ycj.com.familyledger.bean
 
-import com.alibaba.fastjson.annotation.JSONField
-import java.util.*
-
 /**
  * @author ycj
  * @version V1.0 <>
@@ -22,14 +19,12 @@ class UserBean {
     /**
      * 用户名
      */
-    @JSONField(name = "user_name")
-    var userName: String? = null
+    var user_name: String? = null
 
     /**
      * 昵称
      */
-    @JSONField(name = "nick_name")
-    var nickName: String? = null
+    var nick_name: String? = null
 
     /**
      * 手机号
@@ -44,14 +39,12 @@ class UserBean {
     /**
      * 修改时间
      */
-    @JSONField(name = "update_date", format = "yyyy-MM-dd HH:mm:ss")
-    var updateDate: Date? = null
+    var update_date: String? = null
 
     /**
      * 创建时间
      */
-    @JSONField(name = "create_date", format = "yyyy-MM-dd HH:mm:ss")
-    var createDate: Date? = null
+    var create_date: String? = null
 
 
 }

@@ -19,7 +19,7 @@ import ycj.com.familyledger.http.HttpUtils
 import ycj.com.familyledger.impl.BaseCallBack
 import ycj.com.familyledger.utils.RegexUtils
 
-class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<LedgerBean>, TextWatcher {
+class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<String>, TextWatcher {
     private var isChanged: Boolean = false
     private var saveFlag: Boolean = false
     private var id: Long = 0
@@ -33,9 +33,9 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
     override fun initialize() {
         dataBean = intent.getParcelableExtra<LedgerBean>(Consts.DATA_BEAN) as LedgerBean
         id = dataBean!!.id!!
-        edxCash?.setText(dataBean?.consumeMoney)
-        edxDate?.setText(dataBean?.consumeDate)
-        edxPhone?.setText(dataBean?.userId.toString())
+        edxCash?.setText(dataBean?.consume_money)
+        edxDate?.setText(dataBean?.consume_date)
+        edxPhone?.setText(dataBean?.user_id.toString())
         setEdxAble(false)
     }
 
@@ -174,11 +174,16 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
         }
     }
 
-    override fun onSuccess(data: BaseResponse<LedgerBean>) {
+    override fun onSuccess(data: BaseResponse<String>) {
         hideLoading()
-        toast(R.string.success_update)
-        setResult(Consts.ACTIVITY_RESULT_REFRESH)
-        finish()
+        if (data.result == 1) {
+            toast(data.data)
+            setResult(Consts.ACTIVITY_RESULT_REFRESH)
+            finish()
+        } else {
+            toast(data.error.message)
+        }
+
     }
 
     override fun onFail(msg: String) {
