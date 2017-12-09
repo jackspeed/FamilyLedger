@@ -10,6 +10,7 @@ import android.os.Parcelable
 </消费记录> */
 class LedgerBean() : Parcelable {
 
+
     /**
      * 主键
      */
@@ -19,16 +20,21 @@ class LedgerBean() : Parcelable {
      * 状态 0正常 1删除
      */
     var status: String? = null
+
     /**
      * 用户id
      */
     var user_id: Long? = null
+
+
 
     /**
      * 用户名
      */
     var userName: String? = null
 
+
+    
     /**
      * 手机号
      */

@@ -190,6 +190,9 @@ class KHomeActivity : KBaseActivity(),
                 }.lparams(height = wrapContent, width = wrapContent) {
                     centerInParent()
                 }
+
+
+
                 splitLayout = textView("筛选") {
                     id = R.id.layout_split
                     gravity = Gravity.CENTER
@@ -199,6 +202,8 @@ class KHomeActivity : KBaseActivity(),
                     centerInParent()
                     alignParentRight()
                 }
+
+
                 leftLayout = textView("结账") {
                     id = R.id.layout_left_title_home
                     gravity = Gravity.CENTER

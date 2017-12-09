@@ -133,6 +133,8 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
 
     }
 
+
+
     override fun initListener() {
         backLayout?.setOnClickListener(this)
     }

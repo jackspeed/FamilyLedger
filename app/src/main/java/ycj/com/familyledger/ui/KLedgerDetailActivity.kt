@@ -139,6 +139,8 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
         }
     }
 
+
+
     override fun initListener() {
         backLayout?.setOnClickListener(this@KLedgerDetailActivity)
         btnEdit?.setOnClickListener(this@KLedgerDetailActivity)
