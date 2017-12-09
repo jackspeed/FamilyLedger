@@ -8,7 +8,7 @@ import android.os.Parcelable
  * @version V1.0 <消费记录>
  * @date 2017-12-07 17:45
 </消费记录> */
-class LedgerBean() : Parcelable {
+class LedgerBean() :Parcelable {
 
 
     /**
@@ -27,12 +27,10 @@ class LedgerBean() : Parcelable {
     var user_id: Long? = null
 
 
-
     /**
      * 用户名
      */
     var userName: String? = null
-
 
 
     /**
@@ -64,16 +62,24 @@ class LedgerBean() : Parcelable {
         id = parcel.readValue(Long::class.java.classLoader) as? Long
         status = parcel.readString()
         user_id = parcel.readValue(Long::class.java.classLoader) as? Long
+        userName = parcel.readString()
+        mobile = parcel.readString()
         consume_date = parcel.readString()
         consume_money = parcel.readString()
+        update_date = parcel.readString()
+        create_date = parcel.readString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeValue(id)
         parcel.writeString(status)
         parcel.writeValue(user_id)
+        parcel.writeString(userName)
+        parcel.writeString(mobile)
         parcel.writeString(consume_date)
         parcel.writeString(consume_money)
+        parcel.writeString(update_date)
+        parcel.writeString(create_date)
     }
 
     override fun describeContents(): Int {

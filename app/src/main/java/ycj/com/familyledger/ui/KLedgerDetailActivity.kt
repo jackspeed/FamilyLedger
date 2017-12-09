@@ -28,14 +28,15 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
     private var btnEdit: TextView? = null
     private var edxCash: EditText? = null
     private var edxDate: EditText? = null
-    private var edxPhone: EditText? = null
-    private var tvPhone: TextView? = null
+    private var edxPhone: TextView? = null
+    private var tvUserName: TextView? = null
     override fun initialize() {
         dataBean = intent.getParcelableExtra<LedgerBean>(Consts.DATA_BEAN) as LedgerBean
         id = dataBean!!.id!!
         edxCash?.setText(dataBean?.consume_money)
         edxDate?.setText(dataBean?.consume_date)
-        edxPhone?.setText(dataBean?.user_id.toString())
+        edxPhone?.setText(dataBean?.mobile.toString())
+        tvUserName?.setText(dataBean?.userName.toString())
         setEdxAble(false)
     }
 
@@ -115,12 +116,12 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
                             textResource = R.string.user_name
                             textColor = resources.getColor(R.color.black_text)
                         }.lparams(height = wrapContent, width = dip(60))
-                        tvPhone = textView {
+                        tvUserName = textView {
                             textColor = resources.getColor(R.color.black_text)
-                            height = wrapContent
-                            width = matchParent
                         }
-                    }.lparams(height = wrapContent, width = matchParent) { margin = dip(8) }
+                    }.lparams(height = wrapContent, width = matchParent) {
+                        margin = dip(8)
+                    }
 
                     linearLayout {
                         orientation = LinearLayout.HORIZONTAL
@@ -128,9 +129,7 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
                             textResource = R.string.phone
                             textColor = resources.getColor(R.color.black_text)
                         }.lparams(height = wrapContent, width = dip(60))
-                        edxPhone = editText {
-                            inputType = InputType.TYPE_CLASS_PHONE
-                            filters = arrayOf<InputFilter>(InputFilter.LengthFilter(11))
+                        edxPhone = textView {
                             textColor = resources.getColor(R.color.gray_text)
                         }.lparams(height = wrapContent, width = matchParent)
                     }.lparams(height = wrapContent, width = matchParent) { margin = dip(8) }
@@ -138,7 +137,6 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
             }.lparams(width = matchParent, height = matchParent)
         }
     }
-
 
 
     override fun initListener() {

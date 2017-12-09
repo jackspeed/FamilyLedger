@@ -9,7 +9,7 @@
     <color name="gray_text">#666666</color>
     <color name="black_text">#333333</color>
     <color name="white">#ffffff</color>
-    <color name="color_title_bar">#6699cc</color>
-    <color name="color_btn_press">#6666ff</color>
+    <color name="color_title_bar">#ff66ff</color>
+    <color name="color_btn_press">#ff99ff</color>
     <color name="color_btn_normal">@color/color_title_bar</color>
 </resources>
