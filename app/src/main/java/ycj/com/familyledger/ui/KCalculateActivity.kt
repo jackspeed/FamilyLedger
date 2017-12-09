@@ -101,6 +101,8 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
         return userName
     }
 
+
+
     override fun initView() {
         relativeLayout {
             //titleLayout

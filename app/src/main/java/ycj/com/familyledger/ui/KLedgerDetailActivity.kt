@@ -84,7 +84,7 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
                         textView {
                             textResource = R.string.cash
                             textColor = resources.getColor(R.color.black_text)
-                        }.lparams(height = wrapContent, width = dip(80))
+                        }.lparams(height = wrapContent, width = dip(60))
                         edxCash = editText {
                             inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_CLASS_NUMBER
                             filters = arrayOf<InputFilter>(InputFilter.LengthFilter(8))
@@ -100,7 +100,7 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
                         textView {
                             textResource = R.string.date
                             textColor = resources.getColor(R.color.black_text)
-                        }.lparams(height = wrapContent, width = dip(80))
+                        }.lparams(height = wrapContent, width = dip(60))
                         edxDate = editText {
                             inputType = InputType.TYPE_DATETIME_VARIATION_DATE or InputType.TYPE_CLASS_DATETIME
                             filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
