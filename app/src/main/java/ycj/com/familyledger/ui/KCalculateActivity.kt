@@ -107,7 +107,7 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
             relativeLayout {
                 id = R.id.layout_title
                 textView("结账") {
-                    textSize = resources.getDimension(R.dimen.title_text_size)
+                    textSize = resources.getDimension(R.dimen.title_size)
                     gravity = Gravity.CENTER
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.color.color_title_bar

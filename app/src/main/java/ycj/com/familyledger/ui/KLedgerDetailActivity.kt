@@ -29,7 +29,7 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
     private var edxCash: EditText? = null
     private var edxDate: EditText? = null
     private var edxPhone: EditText? = null
-
+    private var tvPhone: TextView? = null
     override fun initialize() {
         dataBean = intent.getParcelableExtra<LedgerBean>(Consts.DATA_BEAN) as LedgerBean
         id = dataBean!!.id!!
@@ -45,13 +45,14 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
         edxPhone?.isEnabled = enable
     }
 
+
     override fun initView() {
         verticalLayout {
             orientation = LinearLayout.VERTICAL
             //titleLayout
             relativeLayout {
                 textView("详情") {
-                    textSize = resources.getDimension(R.dimen.title_text_size)
+                    textSize = resources.getDimension(R.dimen.title_size)
                     gravity = Gravity.CENTER
                     textColor = resources.getColor(R.color.white)
                     backgroundResource = R.color.color_title_bar
@@ -82,14 +83,12 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
                         orientation = LinearLayout.HORIZONTAL
                         textView {
                             textResource = R.string.cash
-                            textSize = resources.getDimension(R.dimen.title_text_size)
                             textColor = resources.getColor(R.color.black_text)
                         }.lparams(height = wrapContent, width = dip(80))
                         edxCash = editText {
                             inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_CLASS_NUMBER
                             filters = arrayOf<InputFilter>(InputFilter.LengthFilter(8))
                             textColor = resources.getColor(R.color.gray_text)
-                            textSize = resources.getDimension(R.dimen.title_text_size)
                         }.lparams(height = wrapContent, width = matchParent)
                     }.lparams(height = wrapContent, width = matchParent) {
                         rightMargin = dip(20)
@@ -100,14 +99,12 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
                         orientation = LinearLayout.HORIZONTAL
                         textView {
                             textResource = R.string.date
-                            textSize = resources.getDimension(R.dimen.title_text_size)
                             textColor = resources.getColor(R.color.black_text)
                         }.lparams(height = wrapContent, width = dip(80))
                         edxDate = editText {
                             inputType = InputType.TYPE_DATETIME_VARIATION_DATE or InputType.TYPE_CLASS_DATETIME
                             filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
                             textColor = resources.getColor(R.color.gray_text)
-                            textSize = resources.getDimension(R.dimen.title_text_size)
                             hint = "日期模板 2017-06-23"
                         }.lparams(height = wrapContent, width = matchParent)
                     }.lparams(height = wrapContent, width = matchParent) { margin = dip(20) }
@@ -115,17 +112,28 @@ class KLedgerDetailActivity : KBaseActivity(), View.OnClickListener, BaseCallBac
                     linearLayout {
                         orientation = LinearLayout.HORIZONTAL
                         textView {
-                            textResource = R.string.phone
-                            textSize = resources.getDimension(R.dimen.title_text_size)
+                            textResource = R.string.user_name
                             textColor = resources.getColor(R.color.black_text)
-                        }.lparams(height = wrapContent, width = dip(80))
+                        }.lparams(height = wrapContent, width = dip(60))
+                        tvPhone = textView {
+                            textColor = resources.getColor(R.color.black_text)
+                            height = wrapContent
+                            width = matchParent
+                        }
+                    }.lparams(height = wrapContent, width = matchParent) { margin = dip(8) }
+
+                    linearLayout {
+                        orientation = LinearLayout.HORIZONTAL
+                        textView {
+                            textResource = R.string.phone
+                            textColor = resources.getColor(R.color.black_text)
+                        }.lparams(height = wrapContent, width = dip(60))
                         edxPhone = editText {
                             inputType = InputType.TYPE_CLASS_PHONE
                             filters = arrayOf<InputFilter>(InputFilter.LengthFilter(11))
                             textColor = resources.getColor(R.color.gray_text)
-                            textSize = resources.getDimension(R.dimen.title_text_size)
                         }.lparams(height = wrapContent, width = matchParent)
-                    }.lparams(height = wrapContent, width = matchParent) { margin = dip(20) }
+                    }.lparams(height = wrapContent, width = matchParent) { margin = dip(8) }
                 }
             }.lparams(width = matchParent, height = matchParent)
         }

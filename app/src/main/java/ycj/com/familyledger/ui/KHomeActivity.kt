@@ -184,8 +184,8 @@ class KHomeActivity : KBaseActivity(),
             relativeLayout {
                 id = R.id.layout_title
                 backgroundResource = R.color.color_title_bar
-                textView("伐木雷") {
-                    textSize = resources.getDimension(R.dimen.title_text_size)
+                textView("Ledger") {
+                    textSize = resources.getDimension(R.dimen.title_size)
                     textColor = resources.getColor(R.color.white)
                 }.lparams(height = wrapContent, width = wrapContent) {
                     centerInParent()

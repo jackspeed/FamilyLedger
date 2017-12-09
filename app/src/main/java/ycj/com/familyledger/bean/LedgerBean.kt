@@ -25,6 +25,16 @@ class LedgerBean() : Parcelable {
     var user_id: Long? = null
 
     /**
+     * 用户名
+     */
+    var userName: String? = null
+
+    /**
+     * 手机号
+     */
+    var mobile: String? = null
+
+    /**
      * 消费时间
      */
     var consume_date: String? = null
