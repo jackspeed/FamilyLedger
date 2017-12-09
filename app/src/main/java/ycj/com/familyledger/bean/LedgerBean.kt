@@ -34,7 +34,7 @@ class LedgerBean() : Parcelable {
     var userName: String? = null
 
 
-    
+
     /**
      * 手机号
      */
