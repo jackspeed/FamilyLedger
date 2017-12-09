@@ -6,7 +6,7 @@ package ycj.com.familyledger
  * @version V1.0 <>
  */
 object Consts {
-    const val BASE_URL = "http://192.168.0.122:9999/ledger/"
+    const val BASE_URL = "http://vz2dc5.natappfree.cc/ledger/"
     const val SP_APP_NAME = "sp_user"
     const val SP_PHONE = "phone"
     const val SP_USER_NAME = "userName"
