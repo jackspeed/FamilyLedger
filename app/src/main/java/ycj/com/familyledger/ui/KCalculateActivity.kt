@@ -95,7 +95,6 @@ class KCalculateActivity : KBaseActivity(), View.OnClickListener, BaseCallBack<L
 
     private fun getUserNameByUserId(userId: Long): String {
         var userName = ""
-        if (userId == null) return userName
         userList.filter { userId == it.userId }
                 .forEach { userName = it.user_name!! }
         return userName

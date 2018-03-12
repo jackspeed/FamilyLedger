@@ -13,7 +13,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         //缓存Context
-        SPUtils.getInstance().init(this)
-        RetrofitUtils.getInstance().init(this)
+        SPUtils.getInstance().init(applicationContext)
+        RetrofitUtils.getInstance().init(applicationContext)
     }
 }

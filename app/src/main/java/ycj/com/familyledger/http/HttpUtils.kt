@@ -13,6 +13,8 @@ import ycj.com.familyledger.impl.IGetLedgerList
  * @version V1.0 <>
  */
 class HttpUtils {
+    private val tag = "HttpUtils"
+
 
     companion object {
         fun getInstance() = Holder.instance
@@ -29,10 +31,10 @@ class HttpUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { }
                 .subscribe({ result ->
-                    Log.i("ycj", result.toString())
+                    Log.i(tag, result.toString())
                     callback.onSuccess(result)
                 }) { throwable ->
-                    Log.i("ycj", throwable.toString())
+                    Log.i(tag, throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }
@@ -44,10 +46,10 @@ class HttpUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { }
                 .subscribe({ result ->
-                    Log.i("ycj", result.toString())
+                    Log.i(tag, result.toString())
                     callback.onSuccess(result)
                 }) { throwable ->
-                    Log.i("ycj", throwable.toString())
+                    Log.i(tag, throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }
@@ -59,10 +61,10 @@ class HttpUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { }
                 .subscribe({ result ->
-                    Log.i("ycj", result.toString())
+                    Log.i(tag, result.toString())
                     callback.onSuccess(result)
                 }) { throwable ->
-                    Log.i("ycj", throwable.toString())
+                    Log.i(tag, throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }
@@ -74,10 +76,10 @@ class HttpUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { }
                 .subscribe({ result ->
-                    Log.i("ycj", result.toString())
+                    Log.i(tag, result.toString())
                     callback.onSuccess(result)
                 }) { throwable ->
-                    Log.i("ycj", throwable.toString())
+                    Log.i(tag, throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }
@@ -89,10 +91,10 @@ class HttpUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { }
                 .subscribe({ result ->
-                    Log.i("ycj", result.toString())
+                    Log.i(tag, result.toString())
                     callback.onSuccess(result)
                 }) { throwable ->
-                    Log.i("ycj", throwable.toString())
+                    Log.i(tag, throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }
@@ -104,10 +106,10 @@ class HttpUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { }
                 .subscribe({ result ->
-                    Log.i("ycj", result.toString())
+                    Log.i(tag, result.toString())
                     callback.onSuccess(result)
                 }) { throwable ->
-                    Log.i("ycj", throwable.toString())
+                    Log.i(tag, throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }
@@ -119,10 +121,10 @@ class HttpUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {}
                 .subscribe({ result ->
-                    Log.i("ycj", result.toString())
+                    Log.i(tag, result.toString())
                     callback.onSuccess(result)
                 }) { throwable ->
-                    Log.i("ycj", throwable.toString())
+                    Log.i(tag, throwable.toString())
                     callback.onFail(throwable.message.toString())
                 }
     }

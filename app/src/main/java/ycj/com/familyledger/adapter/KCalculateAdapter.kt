@@ -1,5 +1,6 @@
 package ycj.com.familyledger.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ class KCalculateAdapter : RecyclerView.Adapter<KCalculateAdapter.MyViewHolder> {
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
         holder!!.tvName.text = dataList[position].userName
         holder.tvPhone.text = dataList[position].phoneNumber
@@ -73,7 +75,7 @@ class KCalculateAdapter : RecyclerView.Adapter<KCalculateAdapter.MyViewHolder> {
     }
 
     fun setDatas(data: List<CalculateBean>) {
-        if (data == null || data.size == 0) return
+        if (data.size == 0) return
         dataList.clear()
         dataList.addAll(data)
         notifyDataSetChanged()

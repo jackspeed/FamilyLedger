@@ -83,7 +83,7 @@ class KHomeAdapter : RecyclerView.Adapter<KHomeAdapter.MyViewHolder> {
     }
 
     fun setDatas(data: List<LedgerBean>) {
-        if (data == null || data.size == 0) return
+        if (data.size == 0) return
         dataList.clear()
         dataList.addAll(data)
         notifyDataSetChanged()

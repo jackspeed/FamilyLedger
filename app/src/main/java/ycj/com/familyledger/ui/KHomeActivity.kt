@@ -44,7 +44,7 @@ class KHomeActivity : KBaseActivity(),
 
     override fun initialize() {
         showLoading()
-        HttpUtils.getInstance().getLedgerList(0, 1, 1000, this);
+        HttpUtils.getInstance().getLedgerList(0, 1, 1000, this)
     }
 
     override fun initListener() {
@@ -145,13 +145,7 @@ class KHomeActivity : KBaseActivity(),
 
     override fun onSuccess(pages: PageResult<LedgerBean>) {
         hideLoading()
-        if (pages.list == null) {
-            mAdapter?.clearData()
-            toast("暂无数据")
-        } else {
-            mAdapter?.setDatas(pages.list)
-        }
-
+        mAdapter?.setDatas(pages.list)
     }
 
     override fun onFail(msg: String) {

@@ -1,5 +1,6 @@
 package ycj.com.familyledger.http
 
+import android.annotation.SuppressLint
 import android.content.Context
 import okhttp3.*
 import retrofit2.Retrofit
@@ -33,7 +34,7 @@ class RetrofitUtils private constructor() : Interceptor {
     fun init(context: Context) {
         this.mContext = context
         initOkHttpclient()
-        var retrofit = Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
                 .baseUrl(Consts.BASE_URL)
                 .client(mOkHttpClient)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -48,6 +49,7 @@ class RetrofitUtils private constructor() : Interceptor {
     }
 
     private object Holder {
+        @SuppressLint("StaticFieldLeak")
         val instance = RetrofitUtils()
     }
 
@@ -73,13 +75,13 @@ class RetrofitUtils private constructor() : Interceptor {
         if (!NetWorkUtils.isNetWorkConnected(mContext!!)) {
             request = request.newBuilder().cacheControl(CacheControl.FORCE_CACHE).build()
         }
-        var response = chain.proceed(request)
-        if (NetWorkUtils.isNetWorkConnected(mContext!!)) {
-            var cacheControl: String = request.cacheControl().toString()
-            return response.newBuilder().header("Cache-Control", cacheControl)
+        val response = chain.proceed(request)
+        return if (NetWorkUtils.isNetWorkConnected(mContext!!)) {
+            val cacheControl: String = request.cacheControl().toString()
+            response.newBuilder().header("Cache-Control", cacheControl)
                     .removeHeader("Pragma").build()
         } else {
-            return response.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_STALE_LONG)
+            response.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_STALE_LONG)
                     .removeHeader("Pragma").build()
         }
     }

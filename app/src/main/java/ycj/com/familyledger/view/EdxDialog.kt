@@ -28,13 +28,13 @@ class EdxDialog {
     }
 
     fun showEdxDialog(msg: String, context: Context, callBack: DataCallBack) {
-        var dialog = Dialog(context)
+        val dialog = Dialog(context)
         dialog.show()
-        var wind = dialog.window
+        val wind = dialog.window
         wind.setBackgroundDrawable(BitmapDrawable())
-        var windowMa = context.windowManager
+        val windowMa = context.windowManager
 
-        var attri = wind.attributes
+        val attri = wind.attributes
         attri.width = (windowMa.defaultDisplay.width * 0.75).toInt()
         attri.height = (windowMa.defaultDisplay.height * 0.45).toInt()
         wind.attributes = attri

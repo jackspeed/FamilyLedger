@@ -40,7 +40,6 @@ class SPUtils {
     }
 
     fun putInt(key: String, value: Int) {
-        if (key == null) return
         sp.edit().putInt(key, value)?.apply()
     }
 
@@ -51,7 +50,6 @@ class SPUtils {
 
 
     fun putString(key: String, value: String) {
-        if (key == null || value == null) return
         sp.edit().putString(key, value)?.apply()
     }
 }
